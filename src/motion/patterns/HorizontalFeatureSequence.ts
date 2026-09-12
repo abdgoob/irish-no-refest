@@ -78,34 +78,43 @@ export function bindHorizontalFeatureSequence(
 
   const cleanups: Array<() => void> = [];
 
-  const applyRunway = () => {
-    const { xStartPx, xEndPx, travelPx, trackWidth, viewWidth } =
-      measureHorizontalTravel(stage, track, leadInRatio, trailOutRatio);
-    const scrollDistance = travelPx * scrollPacing;
+  const metrics = {
+    xStartPx: 0,
+    xEndPx: 0,
+  };
+
+  const refreshMetrics = () => {
+    const measured = measureHorizontalTravel(
+      stage,
+      track,
+      leadInRatio,
+      trailOutRatio,
+    );
+    metrics.xStartPx = measured.xStartPx;
+    metrics.xEndPx = measured.xEndPx;
+    const scrollDistance = measured.travelPx * scrollPacing;
     const vh = stage.clientHeight || window.innerHeight;
     wrapper.style.height = `${Math.round(vh + scrollDistance)}px`;
 
     logMotionDebug(debug, "horizontal feature measure", {
       runwayPx: wrapper.offsetHeight,
-      trackWidth,
-      viewWidth,
-      xStartPx,
-      xEndPx,
-      travelPx,
+      trackWidth: measured.trackWidth,
+      viewWidth: measured.viewWidth,
+      xStartPx: measured.xStartPx,
+      xEndPx: measured.xEndPx,
+      travelPx: measured.travelPx,
       scrollPacing,
       items: items.length,
     });
-
-    return { xStartPx, xEndPx };
   };
 
-  applyRunway();
+  refreshMetrics();
 
   const scrollTween = gsap.fromTo(
     track,
-    { x: () => applyRunway().xStartPx },
+    { x: () => metrics.xStartPx },
     {
-      x: () => applyRunway().xEndPx,
+      x: () => metrics.xEndPx,
       ease: "none",
       scrollTrigger: {
         trigger: wrapper,
@@ -113,6 +122,7 @@ export function bindHorizontalFeatureSequence(
         end: "bottom bottom",
         scrub: SCRUB.STANDARD,
         invalidateOnRefresh: true,
+        onRefresh: refreshMetrics,
       },
     },
   );
@@ -182,7 +192,7 @@ export function bindHorizontalFeatureSequence(
   });
 
   const onResize = () => {
-    applyRunway();
+    refreshMetrics();
     ScrollTrigger.refresh();
   };
   window.addEventListener("resize", onResize);
