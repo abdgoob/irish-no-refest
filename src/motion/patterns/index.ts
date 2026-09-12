@@ -8,3 +8,12 @@ export {
   createAtmosphereTransition,
   type AtmosphereTransitionHandle,
 } from "@/motion/patterns/AtmosphereTransition";
+export {
+  bindHorizontalFeatureSequence,
+  bindHorizontalFeatureSequenceMatchMedia,
+  type HorizontalFeatureSequenceConfig,
+} from "@/motion/patterns/HorizontalFeatureSequence";
+export {
+  getHorizontalFeatureCardMotion,
+  type HorizontalFeatureCardMotion,
+} from "@/motion/patterns/horizontalFeatureChoreography";

@@ -717,6 +717,14 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
   margin-top: calc(64rem / var(--scale-ratio));
 }
 
+.sd-benefits__horiz-runway {
+  position: relative;
+}
+
+.sd-benefits__horiz-stage {
+  position: relative;
+}
+
 .sd-benefits__intro-img {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -808,6 +816,33 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
   .sd-benefits__strip {
     gap: calc(48rem / var(--scale-ratio));
     margin-top: calc(64rem / var(--scale-ratio));
+  }
+}
+
+@media (min-width: 992px) {
+  html[data-motion-enhanced="true"] .sd-benefits__horiz-runway {
+    margin-top: calc(96rem / var(--scale-ratio));
+  }
+
+  html[data-motion-enhanced="true"] .sd-benefits__horiz-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  html[data-motion-enhanced="true"] .sd-benefits__strip {
+    margin-top: 0;
+    overflow-x: visible;
+    scroll-snap-type: none;
+    will-change: transform;
+  }
+
+  html[data-motion-enhanced="true"] .sd-benefit-card {
+    will-change: transform;
   }
 }
 
