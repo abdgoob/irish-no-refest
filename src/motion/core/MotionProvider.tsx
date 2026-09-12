@@ -18,9 +18,11 @@ import {
   refreshScrollTriggersAfterFonts,
   scheduleScrollTriggerRefresh,
 } from "@/motion/core/refreshScrollTriggers";
+import { motionMediaQueries } from "@/motion/config/tokens";
 import { registerGsapPlugins, ScrollTrigger } from "@/motion/core/gsap";
 import { MotionContext, type MotionContextValue } from "@/motion/core/MotionContext";
 import { MotionDevProbe } from "@/motion/dev/MotionDevProbe";
+import type { LenisScrollHandle } from "@/motion/core/lenis";
 
 type MotionProviderProps = {
   children: ReactNode;
@@ -61,13 +63,32 @@ export function MotionProvider({ children }: MotionProviderProps) {
   useEffect(() => {
     if (!enhanced) {
       document.documentElement.classList.remove("lenis", "lenis-smooth");
+      delete document.documentElement.dataset.lenisActive;
       return;
     }
 
     registerGsapPlugins();
-    document.documentElement.classList.add("lenis", "lenis-smooth");
 
-    const { destroy } = createLenisScroll();
+    let lenisHandle: LenisScrollHandle | null = null;
+    const desktopMq = window.matchMedia(motionMediaQueries.desktop);
+
+    const syncLenis = () => {
+      const useLenis = desktopMq.matches;
+      document.documentElement.dataset.lenisActive = String(useLenis);
+
+      if (useLenis && !lenisHandle) {
+        document.documentElement.classList.add("lenis", "lenis-smooth");
+        lenisHandle = createLenisScroll();
+      } else if (!useLenis && lenisHandle) {
+        lenisHandle.destroy();
+        lenisHandle = null;
+        document.documentElement.classList.remove("lenis", "lenis-smooth");
+        ScrollTrigger.update();
+      }
+    };
+
+    syncLenis();
+    desktopMq.addEventListener("change", syncLenis);
 
     void document.fonts.ready.then(() => {
       ScrollTrigger.refresh();
@@ -76,6 +97,7 @@ export function MotionProvider({ children }: MotionProviderProps) {
       if (motionEnv.debug) {
         console.info("[motion] ready", {
           reduced: getReducedMotionPreference(),
+          lenis: document.documentElement.dataset.lenisActive === "true",
           scrollTriggers: ScrollTrigger.getAll().length,
         });
       }
@@ -86,9 +108,12 @@ export function MotionProvider({ children }: MotionProviderProps) {
 
     return () => {
       window.removeEventListener("resize", onResize);
+      desktopMq.removeEventListener("change", syncLenis);
       cancelScheduledScrollTriggerRefresh();
-      destroy();
+      lenisHandle?.destroy();
+      lenisHandle = null;
       document.documentElement.classList.remove("lenis", "lenis-smooth");
+      delete document.documentElement.dataset.lenisActive;
       setLenisReady(false);
     };
   }, [enhanced]);

@@ -1,12 +1,13 @@
 "use client";
 
-import { gsap, ScrollTrigger } from "@/motion/core/gsap";
+import { gsap } from "@/motion/core/gsap";
 import { motionMediaQueries } from "@/motion/config/tokens";
 import { SCRUB } from "@/motion/config/tokens";
 import {
   getHorizontalFeatureCardMotion,
   type HorizontalFeatureCardMotion,
 } from "@/motion/patterns/horizontalFeatureChoreography";
+import { scheduleScrollTriggerRefresh } from "@/motion/core/refreshScrollTriggers";
 import { logMotionDebug } from "@/motion/core/splitTextUtils";
 
 export type HorizontalFeatureSequenceConfig = {
@@ -193,7 +194,7 @@ export function bindHorizontalFeatureSequence(
 
   const onResize = () => {
     refreshMetrics();
-    ScrollTrigger.refresh();
+    scheduleScrollTriggerRefresh();
   };
   window.addEventListener("resize", onResize);
   cleanups.push(() => window.removeEventListener("resize", onResize));

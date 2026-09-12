@@ -128,7 +128,13 @@ export class ScrollFrameCanvas {
         }
         resolve();
       };
-      img.onerror = () => resolve();
+      img.onerror = () => {
+        if (index === 0 && !this.firstFrameNotified) {
+          this.firstFrameNotified = true;
+          this.onFirstFrame?.();
+        }
+        resolve();
+      };
       img.src = this.urls[index];
     });
   }

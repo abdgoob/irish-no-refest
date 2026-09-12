@@ -27,18 +27,24 @@ export function EditorialMotionLayer() {
         if (disposed) return;
 
         const root = scopeRef.current?.closest("main") ?? document;
-        const result = await bindEditorialMotion(root, debug);
-        if (disposed) {
-          result.cleanups.forEach((fn) => fn());
-          return;
-        }
-        cleanups.push(...result.cleanups);
-        document.documentElement.dataset.motionEditorialReady = "true";
+        try {
+          const result = await bindEditorialMotion(root, debug);
+          if (disposed) {
+            result.cleanups.forEach((fn) => fn());
+            return;
+          }
+          cleanups.push(...result.cleanups);
+          document.documentElement.dataset.motionEditorialReady = "true";
 
-        if (debug) {
-          console.info("[motion] editorial ready", {
-            scrollTriggers: result.scrollTriggerCount,
-          });
+          if (debug) {
+            console.info("[motion] editorial ready", {
+              scrollTriggers: result.scrollTriggerCount,
+            });
+          }
+        } catch (err) {
+          if (debug) {
+            console.warn("[motion] editorial bind failed", err);
+          }
         }
       })();
 

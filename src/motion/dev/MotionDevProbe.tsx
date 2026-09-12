@@ -20,11 +20,11 @@ export function MotionDevProbe() {
 
   useGSAP(
     () => {
-      if (!enhanced || !boxRef.current) return;
+      if (!debug || !enhanced || !boxRef.current) return;
 
       registerGsapPlugins();
 
-      gsap.fromTo(
+      const tween = gsap.fromTo(
         boxRef.current,
         { opacity: 0.35, y: 24 },
         {
@@ -39,8 +39,13 @@ export function MotionDevProbe() {
           },
         },
       );
+
+      return () => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+      };
     },
-    { scope: boxRef, dependencies: [enhanced] },
+    { scope: boxRef, dependencies: [debug, enhanced] },
   );
 
   if (!debug) return null;

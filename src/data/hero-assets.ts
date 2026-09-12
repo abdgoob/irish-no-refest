@@ -22,7 +22,8 @@ export const heroSceneConfig: HeroSceneConfig = {
   fallbackImage: images.hero.desktop,
   mobileImage: images.hero.mobile,
   desktopRunway: "400svh",
-  mobileRunway: "200svh",
+  /** Shorter than reference — faster handoff to content on phones (2H). */
+  mobileRunway: "140svh",
   // Frame-only until a real-alpha compositor exists. Assets remain on disk.
   layersEnabled: false,
   layers: [
