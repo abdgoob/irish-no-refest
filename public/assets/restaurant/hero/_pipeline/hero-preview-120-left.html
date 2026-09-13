@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Restaurant hero — 120-frame (left-aligned axis)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #0a0a0b; color: #e8e6e3; font-family: system-ui, sans-serif; }
+    .stage { position: fixed; inset: 0; overflow: hidden; }
+    .stage img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      display: block;
+    }
+    .hud {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      padding: 1rem 1.25rem 1.5rem;
+      background: linear-gradient(transparent, rgba(0,0,0,.78));
+      display: flex; flex-direction: column; gap: .75rem;
+    }
+    .row { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+    input[type=range] { flex: 1; min-width: 180px; accent-color: #c9a962; }
+    .frame-label { font-variant-numeric: tabular-nums; min-width: 3.5ch; }
+    button {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      color: inherit;
+      padding: .4rem .75rem; border-radius: 4px; cursor: pointer;
+    }
+    button:hover { background: rgba(255,255,255,.14); }
+    button.active { border-color: #c9a962; }
+    .meta { font-size: .75rem; opacity: .7; }
+  </style>
+</head>
+<body>
+  <div class="stage"><img id="frame" alt="" src="../frames/000.webp" /></div>
+  <div class="hud">
+    <div class="row">
+      <span class="frame-label" id="num">000</span>
+      <input type="range" id="slider" min="0" max="119" value="0" step="1" />
+      <button type="button" id="play">Autoplay</button>
+      <button type="button" id="rev">Reverse</button>
+    </div>
+    <p class="meta">Left-biased crop axis · ← → · object-fit: cover</p>
+  </div>
+  <script>
+    const MAX = 119;
+    const img = document.getElementById('frame');
+    const slider = document.getElementById('slider');
+    const num = document.getElementById('num');
+    const playBtn = document.getElementById('play');
+    const revBtn = document.getElementById('rev');
+    let playing = false, reverse = false, timer = null;
+    function pad(n) { return String(n).padStart(3, '0'); }
+    function show(i) {
+      i = Math.max(0, Math.min(MAX, i));
+      slider.value = i;
+      num.textContent = pad(i);
+      img.src = '../frames/' + pad(i) + '.webp?' + (performance.now() | 0);
+    }
+    slider.addEventListener('input', () => show(Number(slider.value)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(Number(slider.value) - 1);
+      if (e.key === 'ArrowRight') show(Number(slider.value) + 1);
+    });
+    revBtn.addEventListener('click', () => {
+      reverse = !reverse;
+      revBtn.classList.toggle('active', reverse);
+    });
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      playBtn.textContent = playing ? 'Pause' : 'Autoplay';
+      if (!playing) { clearInterval(timer); return; }
+      timer = setInterval(() => {
+        let n = Number(slider.value) + (reverse ? -1 : 1);
+        if (n > MAX) n = 0;
+        if (n < 0) n = MAX;
+        show(n);
+      }, 1000 / 24);
+    });
+  </script>
+</body>
+</html>

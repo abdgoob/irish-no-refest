@@ -1,40 +1,18 @@
 {
-  "focal": {
-    "x": 0.52,
-    "y": 0.52
+  "pass": "quality-export-v4",
+  "focal": { "x": 0.47, "y": 0.52 },
+  "openingZoom": 1.9,
+  "workCanvas": { "width": 2048, "height": 876, "scale": 2 },
+  "previousExport": {
+    "format": "webp",
+    "quality": 88,
+    "effort": 6,
+    "smartSubsample": false
   },
-  "openingZoom": 2,
-  "openingZoomCandidates": [
-    1.7,
-    1.85,
-    2,
-    2.15,
-    2.3
-  ],
-  "sharpnessScores": [
-    {
-      "z": 1.7,
-      "score": 2927.972962754313
-    },
-    {
-      "z": 1.85,
-      "score": 2959.915282280139
-    },
-    {
-      "z": 2,
-      "score": 3005.6023609154954
-    },
-    {
-      "z": 2.15,
-      "score": 3032.328029718168
-    },
-    {
-      "z": 2.3,
-      "score": 3005.4061533021522
-    }
-  ],
-  "workCanvas": {
-    "width": 4096,
-    "height": 1752
-  }
+  "export": {
+    "id": "C-q96",
+    "format": "webp",
+    "opts": { "quality": 96, "effort": 6, "smartSubsample": false }
+  },
+  "reason": "q96 closest lossy match to PNG with shippable size; PNG not materially better at viewing scale"
 }

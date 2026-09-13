@@ -1,0 +1,57 @@
+{
+  "winner": {
+    "id": "C-q96",
+    "opts": {
+      "quality": 96,
+      "effort": 6,
+      "smartSubsample": false
+    },
+    "format": "webp"
+  },
+  "reason": "q96 closest lossy match to PNG with shippable size",
+  "avgs": {
+    "A-q88": {
+      "mae": 1.6591,
+      "psnr": 41.05,
+      "kb": 280.6,
+      "n": 4
+    },
+    "B-q92": {
+      "mae": 1.3702,
+      "psnr": 42.69,
+      "kb": 350.9,
+      "n": 4
+    },
+    "C-q96": {
+      "mae": 1.0801,
+      "psnr": 44.68,
+      "kb": 459.9,
+      "n": 4
+    },
+    "D-png": {
+      "mae": 0,
+      "psnr": 99,
+      "kb": 4513.9,
+      "n": 4
+    },
+    "E-q94": {
+      "mae": 1.2223,
+      "psnr": 43.67,
+      "kb": 399.7,
+      "n": 4
+    },
+    "F-lossless": {
+      "mae": 0,
+      "psnr": 99,
+      "kb": 1615.3,
+      "n": 4
+    }
+  },
+  "pngKb": 4513.9,
+  "pngMateriallyBetter": false,
+  "focal": {
+    "x": 0.47,
+    "y": 0.52
+  },
+  "openingZoom": 1.9
+}

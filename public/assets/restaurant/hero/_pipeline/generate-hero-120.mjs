@@ -1,6 +1,5 @@
 /**
- * Restaurant hero — 120-frame virtual dolly from approved master v2.
- * Crop-only; no per-frame AI. Output: ../frames/000.webp–119.webp @ 1920×960.
+ * Restaurant hero — 120-frame crop pullback (left-biased axis, quality pass).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -13,18 +12,24 @@ const PIPELINE = __dirname;
 
 const MASTER_PATH =
   process.env.HERO_MASTER ??
-  "C:\\Users\\avail\\.cursor\\projects\\c-Users-avail-son-daven-clone\\assets\\c__Users_avail_AppData_Roaming_Cursor_User_workspaceStorage_1c0e3ff7e6976e2748dc7c62aa44af7b_images_ChatGPT_Image_Sep_14__2026__01_50_58_AM-a4fd4554-73ce-4a2f-a1c3-bca30c25e3a3.jpg";
+  "C:\\Users\\avail\\.cursor\\projects\\c-Users-avail-son-daven-clone\\assets\\c__Users_avail_AppData_Roaming_Cursor_User_workspaceStorage_1c0e3ff7e6976e2748dc7c62aa44af7b_images_ChatGPT_Image_Sep_14__2026__01_50_58_AM-56dcf626-852b-419e-97f2-f85496d9460d.jpg";
 
 const OUT_W = 1920;
 const OUT_H = 960;
 const FRAME_COUNT = 120;
-const WEBP_QUALITY = 86;
-const WORK_W = 4096;
+const WEBP_QUALITY = 88;
+/** Conservative 2× grid for stable crop math — not a detail hallucination pass. */
+const WORK_SCALE = 2;
 
-const FOCAL_X = 0.52;
-const FOCAL_Y = 0.52;
+const OPENING_ZOOM_CANDIDATES = [1.75, 1.9, 2.05, 2.2, 2.35];
 
-const OPENING_ZOOM_CANDIDATES = [1.7, 1.85, 2.0, 2.15, 2.3];
+const FOCAL_CANDIDATES = [
+  { x: 0.47, y: 0.52 },
+  { x: 0.48, y: 0.52 },
+  { x: 0.49, y: 0.52 },
+  { x: 0.48, y: 0.51 },
+  { x: 0.48, y: 0.53 },
+];
 
 const BASE_KEYFRAMES = [
   [0, 2.0],
@@ -38,6 +43,9 @@ const BASE_KEYFRAMES = [
   [119, 1.0],
 ];
 
+let FOCAL_X = 0.48;
+let FOCAL_Y = 0.52;
+
 function easeInOutCubic(x) {
   return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 }
@@ -45,14 +53,13 @@ function easeOutCubic(x) {
   return 1 - Math.pow(1 - x, 3);
 }
 
-/** Luxury camera progress 0→1 over frames 0…119 */
 function cameraProgress(i) {
   const n = FRAME_COUNT - 1;
   if (i <= 12) return 0.028 * easeInOutCubic(i / 12);
   if (i <= 35) return 0.028 + 0.195 * easeInOutCubic((i - 12) / (35 - 12));
   if (i <= 78) return 0.223 + 0.552 * ((i - 35) / (78 - 35));
-  if (i <= 101) return 0.775 + 0.175 * easeOutCubic((i - 78) / (101 - 78));
-  return 0.95 + 0.05 * easeOutCubic((i - 101) / (n - 101));
+  if (i <= 102) return 0.775 + 0.175 * easeOutCubic((i - 78) / (102 - 78));
+  return 0.95 + 0.05 * easeOutCubic((i - 102) / (n - 102));
 }
 
 function scaleZoomTable(z0) {
@@ -67,9 +74,7 @@ function zoomFromProgress(p, z0) {
   for (let k = 0; k < prog.length - 1; k++) {
     if (p >= prog[k] && p <= prog[k + 1]) {
       const t = (p - prog[k]) / (prog[k + 1] - prog[k]);
-      const zA = keys[k][1];
-      const zB = keys[k + 1][1];
-      return zA + (zB - zA) * t;
+      return keys[k][1] + (keys[k + 1][1] - keys[k][1]) * t;
     }
   }
   return 1;
@@ -81,85 +86,99 @@ function zoomAtFrame(i, z0) {
 
 async function buildWorkCanvas() {
   const meta = await sharp(MASTER_PATH).metadata();
-  const workH = Math.round(WORK_W * (meta.height / meta.width));
+  const workW = meta.width * WORK_SCALE;
+  const workH = Math.round(meta.height * WORK_SCALE);
   return sharp(MASTER_PATH)
-    .resize(WORK_W, workH, { kernel: sharp.kernel.lanczos3, fit: "fill" })
+    .resize(workW, workH, { kernel: sharp.kernel.lanczos3, fit: "fill" })
     .png()
     .toBuffer({ resolveWithObject: true });
 }
 
-function cropGeometry(workW, workH, zoom) {
+function cropGeometry(workW, workH, zoom, fx = FOCAL_X, fy = FOCAL_Y) {
   const maxCropW = Math.min(workW, workH * 2);
   const maxCropH = maxCropW / 2;
-  let cropW = maxCropW / zoom;
-  let cropH = maxCropH / zoom;
-  const cx = FOCAL_X * workW;
-  const cy = FOCAL_Y * workH;
+  const cropW = maxCropW / zoom;
+  const cropH = maxCropH / zoom;
+  const cx = fx * workW;
+  const cy = fy * workH;
   let left = cx - cropW / 2;
   let top = cy - cropH / 2;
   left = Math.max(0, Math.min(workW - cropW, left));
   top = Math.max(0, Math.min(workH - cropH, top));
-  cropW = Math.max(2, Math.round(cropW));
-  cropH = Math.max(2, Math.round(cropH));
-  left = Math.round(left);
-  top = Math.round(top);
-  if (left + cropW > workW) left = workW - cropW;
-  if (top + cropH > workH) top = workH - cropH;
-  return { left, top, width: cropW, height: cropH };
+  const w = Math.max(2, Math.round(cropW));
+  const h = Math.max(2, Math.round(cropH));
+  const l = Math.round(left);
+  const t = Math.round(top);
+  return {
+    left: Math.min(l, workW - w),
+    top: Math.min(t, workH - h),
+    width: w,
+    height: h,
+  };
 }
 
-async function renderFrame(workBuf, workW, workH, zoom) {
-  const { left, top, width, height } = cropGeometry(workW, workH, zoom);
+async function renderFrame(workBuf, workW, workH, zoom, fx, fy) {
+  const { left, top, width, height } = cropGeometry(workW, workH, zoom, fx, fy);
   return sharp(workBuf)
     .extract({ left, top, width, height })
     .resize(OUT_W, OUT_H, { kernel: sharp.kernel.lanczos3 })
-    .webp({ quality: WEBP_QUALITY, effort: 6 })
+    .webp({ quality: WEBP_QUALITY, effort: 6, smartSubsample: false })
     .toBuffer();
 }
 
 async function sharpnessScore(webpBuf) {
-  const { data, info } = await sharp(webpBuf)
-    .resize(480, 240)
-    .greyscale()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
+  const { data } = await sharp(webpBuf).resize(480, 240).greyscale().raw().toBuffer({
+    resolveWithObject: true,
+  });
   let sum = 0;
   let sumSq = 0;
-  const n = data.length;
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < data.length; i++) {
     sum += data[i];
     sumSq += data[i] * data[i];
   }
-  const mean = sum / n;
-  const variance = sumSq / n - mean * mean;
-  return variance;
+  const mean = sum / data.length;
+  return sumSq / data.length - mean * mean;
 }
 
-async function buildOpeningCropTest(workBuf, workW, workH) {
+async function selectFocalCenter(workBuf, workW, workH) {
+  const probeZoom = 1.9;
+  let best = FOCAL_CANDIDATES[0];
+  let bestScore = -1;
+  for (const c of FOCAL_CANDIDATES) {
+    const frame = await renderFrame(workBuf, workW, workH, probeZoom, c.x, c.y);
+    const score = await sharpnessScore(frame);
+    if (score > bestScore) {
+      bestScore = score;
+      best = c;
+    }
+  }
+  return best;
+}
+
+async function buildLeftAlignOpeningTest(workBuf, workW, workH) {
   const cellW = OUT_W;
   const cellH = OUT_H;
   const cols = OPENING_ZOOM_CANDIDATES.length;
-  const labels = [];
   const scores = [];
-
   const composites = [];
+
   for (let c = 0; c < cols; c++) {
     const z = OPENING_ZOOM_CANDIDATES[c];
     const frame = await renderFrame(workBuf, workW, workH, z);
     const score = await sharpnessScore(frame);
     scores.push({ z, score });
-    labels.push(`${z.toFixed(2)}× (σ²=${Math.round(score)})`);
     composites.push({
-      input: await sharp(frame).toBuffer(),
+      input: await sharp(frame).webp({ quality: 90 }).toBuffer(),
       left: c * cellW,
-      top: 0,
+      top: 48,
     });
   }
 
   const labelSvg = `<svg width="${cols * cellW}" height="48" xmlns="http://www.w3.org/2000/svg">
+    <text x="${(cols * cellW) / 2}" y="20" text-anchor="middle" fill="#9a9590" font-family="system-ui,sans-serif" font-size="16">focal x=${FOCAL_X} y=${FOCAL_Y} — left-biased center</text>
     ${OPENING_ZOOM_CANDIDATES.map(
       (z, i) =>
-        `<text x="${i * cellW + cellW / 2}" y="32" text-anchor="middle" fill="#e8e6e3" font-family="system-ui,sans-serif" font-size="22">${z.toFixed(2)}×</text>`,
+        `<text x="${i * cellW + cellW / 2}" y="40" text-anchor="middle" fill="#e8e6e3" font-family="system-ui,sans-serif" font-size="20">${z.toFixed(2)}×</text>`,
     ).join("")}
   </svg>`;
 
@@ -171,30 +190,33 @@ async function buildOpeningCropTest(workBuf, workW, workH) {
       background: { r: 14, g: 14, b: 16 },
     },
   })
-    .composite([
-      ...composites.map((c) => ({ ...c, top: 48 })),
-      { input: Buffer.from(labelSvg), top: 0, left: 0 },
-    ])
-    .webp({ quality: 88 })
-    .toFile(path.join(PIPELINE, "frame000-final-crop-test.webp"));
+    .composite([...composites, { input: Buffer.from(labelSvg), top: 0, left: 0 }])
+    .webp({ quality: 90 })
+    .toFile(path.join(PIPELINE, "frame000-left-align-test.webp"));
 
   return scores;
 }
 
-/** Prefer crisp 1.85–2.10 band; avoid max zoom unless clearly sharper (>3%). */
 function selectOpeningZoom(scores) {
   const byZ = Object.fromEntries(scores.map((s) => [s.z, s.score]));
-  const zPrefer = 2.0;
-  const sPrefer = byZ[zPrefer] ?? 0;
-  const s215 = byZ[2.15] ?? 0;
-  if (s215 > sPrefer * 1.03) return 2.15;
-  if (sPrefer >= (byZ[1.85] ?? 0)) return zPrefer;
-  return scores.reduce((a, b) => (a.score > b.score ? a : b)).z;
+  const prefer = [1.9, 1.75, 2.05];
+  for (const z of prefer) {
+    const s = byZ[z];
+    if (s == null) continue;
+    const s220 = byZ[2.2] ?? 0;
+    const s235 = byZ[2.35] ?? 0;
+    if (z <= 1.9 && s >= s220 * 0.97 && s >= s235 * 0.98) return z;
+    if (z === 2.05 && s >= s220 * 1.02) return z;
+  }
+  const inBand = scores.filter((s) => s.z >= 1.75 && s.z <= 2.05);
+  if (inBand.length) return inBand.reduce((a, b) => (a.score >= b.score ? a : b)).z;
+  return 1.9;
 }
 
 async function buildDiffReport() {
   const report = {
     frameCount: FRAME_COUNT,
+    focal: { x: FOCAL_X, y: FOCAL_Y },
     dimensions: { width: OUT_W, height: OUT_H },
     pairs: [],
     flagged: [],
@@ -209,9 +231,7 @@ async function buildDiffReport() {
       const normalized = sum / (small.length * 255);
       const entry = { from: i - 1, to: i, normalizedDiff: Number(normalized.toFixed(5)) };
       report.pairs.push(entry);
-      if (normalized > 0.08 || (i <= 12 && normalized < 0.0005)) {
-        report.flagged.push(entry);
-      }
+      if (normalized > 0.08 || (i <= 12 && normalized < 0.0005)) report.flagged.push(entry);
     }
     prev = small;
   }
@@ -240,40 +260,29 @@ async function sheet(indices, cols, cellW, cellH, outName) {
     },
   })
     .composite(composites)
-    .webp({ quality: 82 })
+    .webp({ quality: 84 })
     .toFile(path.join(PIPELINE, outName));
 }
 
 async function main() {
   fs.mkdirSync(FRAMES_DIR, { recursive: true });
-  fs.mkdirSync(path.join(PIPELINE, "archive-sequence-72-v1"), { recursive: true });
 
-  const masterCopy = path.join(PIPELINE, "master-approved-v2.jpg");
-  if (!fs.existsSync(masterCopy)) fs.copyFileSync(MASTER_PATH, masterCopy);
+  const masterCopy = path.join(PIPELINE, "master-approved-v3.jpg");
+  fs.copyFileSync(MASTER_PATH, masterCopy);
 
-  const existing = fs.readdirSync(FRAMES_DIR).filter((f) => f.endsWith(".webp"));
-  if (existing.length === 72 && !fs.existsSync(path.join(PIPELINE, "archive-sequence-72-v1", "000.webp"))) {
-    for (const f of existing) {
-      fs.renameSync(
-        path.join(FRAMES_DIR, f),
-        path.join(PIPELINE, "archive-sequence-72-v1", f),
-      );
-    }
-    console.log("Archived previous 72-frame sequence to _pipeline/archive-sequence-72-v1/");
-  }
-
-  console.log("Building working master…");
+  console.log("Building conservative working master…");
   const { data: workBuf, info } = await buildWorkCanvas();
   const workW = info.width;
   const workH = info.height;
-  fs.writeFileSync(
-    path.join(PIPELINE, "working-master-4096.png"),
-    workBuf,
-  );
+  fs.writeFileSync(path.join(PIPELINE, "working-master-2x.png"), workBuf);
+  console.log(`Work canvas: ${workW}×${workH} (${WORK_SCALE}× source)`);
 
-  console.log(`Work canvas: ${workW}×${workH}`);
+  const focal = await selectFocalCenter(workBuf, workW, workH);
+  FOCAL_X = focal.x;
+  FOCAL_Y = focal.y;
+  console.log("Selected focal:", focal);
 
-  const scores = await buildOpeningCropTest(workBuf, workW, workH);
+  const scores = await buildLeftAlignOpeningTest(workBuf, workW, workH);
   const z0 = selectOpeningZoom(scores);
   console.log("Opening zoom candidates:", scores);
   console.log("Selected opening zoom:", z0);
@@ -282,11 +291,13 @@ async function main() {
     path.join(PIPELINE, "hero-120-config.json"),
     JSON.stringify(
       {
+        pass: "left-align-quality-v3",
         focal: { x: FOCAL_X, y: FOCAL_Y },
         openingZoom: z0,
         openingZoomCandidates: OPENING_ZOOM_CANDIDATES,
         sharpnessScores: scores,
-        workCanvas: { width: workW, height: workH },
+        workCanvas: { width: workW, height: workH, scale: WORK_SCALE },
+        webpQuality: WEBP_QUALITY,
       },
       null,
       2,
@@ -294,10 +305,9 @@ async function main() {
   );
 
   const zoomByFrame = [];
-  for (let i = 0; i < FRAME_COUNT; i++) {
-    zoomByFrame.push(zoomAtFrame(i, z0));
-  }
-  const minStep = 0.0015;
+  for (let i = 0; i < FRAME_COUNT; i++) zoomByFrame.push(zoomAtFrame(i, z0));
+
+  const minStep = 0.0012;
   for (let i = 1; i < FRAME_COUNT; i++) {
     if (zoomByFrame[i - 1] - zoomByFrame[i] < minStep) {
       zoomByFrame[i] = Math.max(1.0, zoomByFrame[i - 1] - minStep);
@@ -307,20 +317,29 @@ async function main() {
 
   for (let i = 0; i < FRAME_COUNT; i++) {
     const outPath = path.join(FRAMES_DIR, `${String(i).padStart(3, "0")}.webp`);
-    const webp = await renderFrame(workBuf, workW, workH, zoomByFrame[i]);
-    fs.writeFileSync(outPath, webp);
+    fs.writeFileSync(
+      outPath,
+      await renderFrame(workBuf, workW, workH, zoomByFrame[i]),
+    );
     if (i % 15 === 0 || i === FRAME_COUNT - 1) {
       console.log(`Frame ${String(i).padStart(3, "0")}  zoom=${zoomByFrame[i].toFixed(4)}`);
     }
   }
 
-  const every6 = [];
-  for (let i = 0; i < FRAME_COUNT; i += 6) every6.push(i);
-  if (every6[every6.length - 1] !== 119) every6.push(119);
-
-  await sheet(every6, 10, 320, 160, "hero-120-contact-sheet.webp");
-  await sheet([0, 15, 30, 45, 60, 75, 90, 105, 119], 3, 640, 320, "hero-120-keyframes.webp");
-  await sheet([0, 3, 6, 9, 12, 15, 18, 21, 24, 30], 5, 384, 192, "hero-120-opening.webp");
+  await sheet(
+    [0, 3, 6, 9, 12, 15, 18, 24, 30],
+    3,
+    640,
+    320,
+    "hero-120-opening-left.webp",
+  );
+  await sheet(
+    [0, 15, 30, 45, 60, 75, 90, 105, 119],
+    3,
+    640,
+    320,
+    "hero-120-keyframes-left.webp",
+  );
 
   await buildDiffReport();
   console.log("Complete.");

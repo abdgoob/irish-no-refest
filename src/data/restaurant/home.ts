@@ -122,10 +122,51 @@ export const nav = {
     { href: "#benefits", label: "The House" },
     { href: actionHref("menu"), label: "Menu" },
     { href: actionHref("order"), label: "Order" },
-    { href: "#finance", label: "Finance" },
-    { href: "#blog", label: "News" },
     { href: "#faq", label: "FAQ" },
     { href: "#contact", label: "Contact" },
+  ],
+} as const;
+
+export const faq = {
+  title: "ANSWERS TO KEY QUESTIONS",
+  subtitle: "Before you visit",
+  items: [
+    {
+      q: "DO YOU TAKE RESERVATIONS?",
+      a: "Yes. We hold tables for dinner and busy match nights. Walk-ins are welcome when we have room—call ahead on weekends if you want a guaranteed spot.",
+    },
+    {
+      q: "WHAT ARE YOUR HOURS?",
+      a: "The kitchen runs lunch through late evening; the bar often stays open after last food order. Hours shift slightly by day—check our site or socials for the current week.",
+    },
+    {
+      q: "DO YOU ACCOMMODATE DIETARY NEEDS AND ALLERGIES?",
+      a: "Tell your server when you sit down. We can guide you on gluten, vegetarian, and common allergens, though our kitchen handles fish, shellfish, dairy, and nuts.",
+    },
+    {
+      q: "IS THERE LIVE MUSIC?",
+      a: "Regular acoustic and trad sessions on select nights. There is no cover; just order from the bar or kitchen like any other evening.",
+    },
+    {
+      q: "DO YOU OFFER PRIVATE DINING OR EVENTS?",
+      a: "We have a semi-private room for birthdays, team dinners, and small celebrations. Email us with your date and head count and we will send options and a set menu.",
+    },
+    {
+      q: "ARE CHILDREN WELCOME?",
+      a: "Families are welcome at lunch and early dinner. Later evenings lean toward the bar crowd; use your judgment for very young children after 8 p.m.",
+    },
+    {
+      q: "DO YOU HAVE PARKING?",
+      a: "Street parking and nearby lots around the neighborhood. Rideshare drop-off at the front door is usually the easiest on busy nights.",
+    },
+    {
+      q: "CAN I ORDER FOOD TO GO?",
+      a: "Takeaway is available for most menu items when the kitchen is open. Online ordering will be linked here when the client platform is live.",
+    },
+    {
+      q: "IS THERE A DRESS CODE?",
+      a: "Come as you are—Austin casual. We only ask that guests stay comfortable and respectful of a shared dining room.",
+    },
   ],
 } as const;
 

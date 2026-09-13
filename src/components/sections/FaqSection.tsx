@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { faqItems } from "@/data/home.en";
+import { faq } from "@/data/restaurant/home";
 import { SectionShell } from "@/components/layout/SectionShell";
 
 export function FaqSection() {
@@ -10,11 +10,11 @@ export function FaqSection() {
   return (
     <SectionShell id="faq" theme="dark" className="sd-faq">
       <div className="sd-faq__head">
-        <h2 className="h2 sd-faq__title">ANSWERS TO KEY QUESTIONS</h2>
-        <p className="p5 sd-faq__subtitle">All you need to know</p>
+        <h2 className="h2 sd-faq__title">{faq.title}</h2>
+        <p className="p5 sd-faq__subtitle">{faq.subtitle}</p>
       </div>
       <div className="sd-faq__list">
-        {faqItems.map((item, index) => (
+        {faq.items.map((item, index) => (
           <div key={item.q} className="sd-faq__item">
             <button
               type="button"

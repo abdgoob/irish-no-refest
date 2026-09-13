@@ -36,6 +36,7 @@ export async function bindEditorialMotion(
       cleanups.push(await bindHighlightScrubText(quote));
       logMotionDebug(debug, "highlight scrub bound", { id: "prolog" });
     }
+
   }
 
   const about = root.querySelector("#about");

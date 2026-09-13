@@ -34,6 +34,10 @@ export const images = {
   about: {
     main: "/assets/restaurant/story/restaurant-story.webp",
   },
+  prologue: {
+    videoLeft: "/assets/restaurant/atmosphere/prologue-left.mp4",
+    videoRight: "/assets/restaurant/atmosphere/prologue-right.mp4",
+  },
   location: {
     waterfall: "/assets/images/location/waterfall.webp",
   },
