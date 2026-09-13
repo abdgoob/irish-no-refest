@@ -34,7 +34,7 @@ export function CtaScrollScene({
       }
 
       registerGsapPlugins();
-      wrapper.dataset.ctaMode = "desktop-runway";
+      wrapper.dataset.ctaMode = "static";
 
       const atmosphere = wrapper.querySelector<HTMLElement>(
         "[data-atmosphere-layer]",

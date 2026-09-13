@@ -61,6 +61,13 @@ export function bindFooterParallaxSceneMatchMedia(
   config: FooterParallaxSceneConfig,
 ): () => void {
   const mm = gsap.matchMedia();
-  mm.add(motionMediaQueries.desktop, () => bindFooterParallaxScene(config));
+  mm.add(motionMediaQueries.desktop, () => {
+    config.scene.dataset.footerMode = "desktop-parallax";
+    const cleanup = bindFooterParallaxScene(config);
+    return () => {
+      cleanup();
+      config.scene.dataset.footerMode = "static";
+    };
+  });
   return () => mm.revert();
 }

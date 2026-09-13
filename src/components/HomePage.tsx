@@ -13,7 +13,6 @@ import { PrologueSection } from "@/components/sections/PrologueSection";
 import { svg } from "@/data/assets";
 import { AboutTransition } from "@/components/sections/AboutTransition";
 import { AboutSection } from "@/components/sections/AboutSection";
-import { LocationSection } from "@/components/sections/LocationSection";
 import { BenefitsSection } from "@/components/sections/BenefitsSection";
 import { CommissioningSection } from "@/components/sections/CommissioningSection";
 import { ApartmentsSection } from "@/components/sections/ApartmentsSection";
@@ -52,8 +51,6 @@ export function HomePage() {
         <PrologueSection />
         <AboutTransition />
         <AboutSection />
-        <ThemeTransition src={svg.transitionDark} />
-        <LocationSection onConsultationOpen={() => setConsultationOpen(true)} />
         <BenefitsSection />
         <CommissioningSection />
         <ApartmentsSection />

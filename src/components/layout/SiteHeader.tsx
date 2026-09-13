@@ -32,9 +32,6 @@ export function SiteHeader({
           >
             Menu
           </button>
-          <a href="#location" className="p5 sd-only-desk" style={{ color: "inherit", textDecoration: "none" }}>
-            Aerotour
-          </a>
         </div>
         <a href="#hero" className="sd-header__logo" aria-label="Son Daven logo">
           <SvgWordmark className="sd-header__logo" />

@@ -133,6 +133,7 @@ export function ApartmentsSection() {
               aria-labelledby={`apt-tab-${id}`}
               data-tab-panel={id}
               hidden={!motionTabs && active !== id}
+              aria-hidden={active !== id}
               inert={active !== id ? true : undefined}
             >
               <ApartmentPanel id={id} />

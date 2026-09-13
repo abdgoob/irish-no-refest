@@ -94,6 +94,26 @@ export function MotionProvider({ children }: MotionProviderProps) {
       ScrollTrigger.refresh();
       setLenisReady(true);
 
+      if (process.env.NODE_ENV === "development") {
+        (
+          window as Window & {
+            __motionAudit?: {
+              scrollTriggerCount: () => number;
+              snapshot: () => Record<string, string | number | boolean>;
+            };
+          }
+        ).__motionAudit = {
+          scrollTriggerCount: () => ScrollTrigger.getAll().length,
+          snapshot: () => ({
+            st: ScrollTrigger.getAll().length,
+            lenisActive: document.documentElement.dataset.lenisActive === "true",
+            motionEnhanced: document.documentElement.dataset.motionEnhanced === "true",
+            motionReduced: document.documentElement.dataset.motionReduced === "true",
+            innerWidth: window.innerWidth,
+          }),
+        };
+      }
+
       if (motionEnv.debug) {
         console.info("[motion] ready", {
           reduced: getReducedMotionPreference(),
@@ -114,6 +134,9 @@ export function MotionProvider({ children }: MotionProviderProps) {
       lenisHandle = null;
       document.documentElement.classList.remove("lenis", "lenis-smooth");
       delete document.documentElement.dataset.lenisActive;
+      delete (
+        window as Window & { __motionAudit?: unknown }
+      ).__motionAudit;
       setLenisReady(false);
     };
   }, [enhanced]);

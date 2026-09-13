@@ -25,7 +25,7 @@ export function FooterScrollScene() {
       }
 
       registerGsapPlugins();
-      scene.dataset.footerMode = "desktop-parallax";
+      scene.dataset.footerMode = "static";
 
       const atmosphere = scene.querySelector<HTMLElement>(
         "[data-footer-atmosphere]",

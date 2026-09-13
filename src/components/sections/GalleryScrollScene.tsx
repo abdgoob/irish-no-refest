@@ -29,7 +29,7 @@ export function GalleryScrollScene() {
       }
 
       registerGsapPlugins();
-      wrapper.dataset.galleryMode = "desktop-sequence";
+      wrapper.dataset.galleryMode = "static";
 
       const slides = [
         ...wrapper.querySelectorAll<HTMLElement>("[data-gallery-slide]"),

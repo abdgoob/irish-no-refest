@@ -584,13 +584,46 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
   min-height: 100svh;
   display: flex;
   align-items: center;
+  justify-content: center;
   padding-block: calc(80rem / var(--scale-ratio));
 }
 
+.sd-prolog__container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.sd-prolog__inner {
+  width: 100%;
+  max-width: calc(980rem / var(--scale-ratio));
+  margin-inline: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sd-prolog__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(12rem / var(--scale-ratio));
+  text-align: center;
+}
+
+.sd-prolog__label-mark {
+  opacity: 0.85;
+  letter-spacing: 0.12em;
+}
+
 .sd-prolog__quote {
-  max-width: 90%;
+  width: 100%;
+  max-width: calc(920rem / var(--scale-ratio));
   margin-top: calc(48rem / var(--scale-ratio));
-  text-wrap: pretty;
+  margin-inline: auto;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .sd-editorial-split-parent {
@@ -713,31 +746,16 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
   max-width: calc(1100rem / var(--scale-ratio));
 }
 
-.sd-benefits__intro {
+.sd-benefits__static,
+.sd-benefits__arc {
   margin-top: calc(64rem / var(--scale-ratio));
 }
 
-.sd-benefits__horiz-runway {
-  position: relative;
-}
-
-.sd-benefits__horiz-stage {
-  position: relative;
-}
-
-.sd-benefits__intro-img {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-}
-
-/* Horizontal editorial strip of tall image cards (static equivalent of the
-   live horizontal-scroll benefits scene). */
+/* Mobile / reduced-motion: vertical editorial strip */
 .sd-benefits__strip {
   display: flex;
   box-sizing: border-box;
   gap: calc(120rem / var(--scale-ratio));
-  margin-top: calc(96rem / var(--scale-ratio));
   padding-inline: var(--page-gutter);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -815,34 +833,76 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
   }
   .sd-benefits__strip {
     gap: calc(48rem / var(--scale-ratio));
-    margin-top: calc(64rem / var(--scale-ratio));
   }
 }
 
+/* Arc fan carousel (desktop enhanced motion) */
+.sd-arc-carousel {
+  width: 100%;
+  padding-inline: var(--page-gutter);
+}
+
+.sd-arc-carousel__stage {
+  position: relative;
+  width: 100%;
+  height: clamp(520px, 82svh, 860px);
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+
+.sd-arc-carousel__stage:active {
+  cursor: grabbing;
+}
+
+.sd-arc-carousel__disc {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 1px solid rgba(44, 40, 36, 0.08);
+  background: radial-gradient(
+    circle at 50% 38%,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(44, 40, 36, 0.04) 55%,
+    transparent 72%
+  );
+  opacity: 0.55;
+}
+
+.sd-arc-carousel__card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform, opacity;
+  transform-origin: 50% 50%;
+  transition: box-shadow 0.25s ease;
+}
+
+.sd-arc-carousel__card[data-arc-active="true"] {
+  box-shadow: 0 24px 64px rgba(44, 40, 36, 0.22);
+}
+
+.sd-arc-carousel__card[data-arc-active="true"] .sd-benefit-card__desc {
+  opacity: 1;
+}
+
+.sd-arc-carousel__card .sd-benefit-card__desc {
+  opacity: 0.72;
+  transition: opacity 0.25s ease;
+}
+
+.sd-arc-carousel__hint {
+  margin-top: calc(16rem / var(--scale-ratio));
+  text-align: center;
+  color: rgba(44, 40, 36, 0.55);
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
+
 @media (min-width: 992px) {
-  html[data-motion-enhanced="true"] .sd-benefits__horiz-runway {
-    margin-top: calc(96rem / var(--scale-ratio));
-  }
-
-  html[data-motion-enhanced="true"] .sd-benefits__horiz-stage {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    min-height: 100svh;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  html[data-motion-enhanced="true"] .sd-benefits__strip {
-    margin-top: 0;
-    overflow-x: visible;
-    scroll-snap-type: none;
-    will-change: transform;
-  }
-
-  html[data-motion-enhanced="true"] .sd-benefit-card {
-    will-change: transform;
+  .sd-benefits__arc {
+    margin-bottom: calc(24rem / var(--scale-ratio));
   }
 }
 
@@ -1656,6 +1716,7 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
     max-width: 32vw;
   }
 
+  .sd-prolog__inner,
   .sd-prolog__quote {
     max-width: 100%;
   }

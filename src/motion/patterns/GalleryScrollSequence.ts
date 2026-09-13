@@ -167,7 +167,12 @@ export function bindGalleryScrollSequenceMatchMedia(
   const mm = gsap.matchMedia();
 
   mm.add(motionMediaQueries.desktop, () => {
-    return bindGalleryScrollSequence(config);
+    config.wrapper.dataset.galleryMode = "desktop-sequence";
+    const cleanup = bindGalleryScrollSequence(config);
+    return () => {
+      cleanup();
+      config.wrapper.dataset.galleryMode = "static";
+    };
   });
 
   return () => {

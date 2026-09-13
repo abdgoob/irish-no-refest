@@ -3,7 +3,6 @@
 const links = [
   { href: "#hero", label: "Home" },
   { href: "#about", label: "About" },
-  { href: "#location", label: "Location" },
   { href: "#benefits", label: "Uniqueness" },
   { href: "#apartments", label: "Apartments" },
   { href: "#finance", label: "Finance" },

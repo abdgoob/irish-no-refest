@@ -91,8 +91,13 @@ export function bindStickyAtmosphereScrollBlockMatchMedia(
   config: StickyAtmosphereScrollBlockConfig,
 ): () => void {
   const mm = gsap.matchMedia();
-  mm.add(motionMediaQueries.desktop, () =>
-    bindStickyAtmosphereScrollBlock(config),
-  );
+  mm.add(motionMediaQueries.desktop, () => {
+    config.wrapper.dataset.ctaMode = "desktop-runway";
+    const cleanup = bindStickyAtmosphereScrollBlock(config);
+    return () => {
+      cleanup();
+      config.wrapper.dataset.ctaMode = "static";
+    };
+  });
   return () => mm.revert();
 }
