@@ -1,4 +1,5 @@
 import { MediaImage } from "@/components/ui/MediaImage";
+import { AboutBirdsScene } from "@/components/sections/AboutBirdsScene";
 import { about } from "@/data/restaurant/home";
 
 export function AboutSection() {
@@ -9,6 +10,7 @@ export function AboutSection() {
       data-theme="light"
       data-header-theme="light"
     >
+      <AboutBirdsScene />
       <div className="sd-container">
         <div className="sd-space-c sd-only-desk" aria-hidden="true" />
 

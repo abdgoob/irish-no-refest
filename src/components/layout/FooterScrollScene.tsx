@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useRef } from "react";
 import { images } from "@/data/assets";
-import { site } from "@/data/home.en";
-import { restaurant } from "@/data/restaurant/home";
+import { contact, restaurant } from "@/data/restaurant/home";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { SvgWordmark } from "@/components/ui/SvgWordmark";
 import { registerGsapPlugins, useGSAP } from "@/motion/core/gsap";
@@ -66,30 +65,28 @@ export function FooterScrollScene() {
       <div className="sd-container sd-footer__content" data-footer-content>
         <div className="sd-grid-12 sd-footer__top">
           <div className="sd-col-1-5 sd-footer__block">
-            <h2 className="h4">LOCATION</h2>
-            <p className="p5 sd-footer__address">
-              I. Petrasha St., 6/3, Yaremche, Ivano-Frankivsk region
-            </p>
-          </div>
-          <div className="sd-col-8-13 sd-footer__block sd-footer__block--end">
-            <h2 className="h4">SALES DEPARTMENTS</h2>
-            <p className="p5 sd-footer__address">
-              Ivano-Frankivsk 35 Konovaltsya St.
-            </p>
-            <h3 className="p4 sd-footer__subhead">YAREMCHE</h3>
-            <p className="p5">260 Svobody St.</p>
-            <p className="p5">Svobody St., 280/1</p>
+            <h2 className="h4">{contact.heading}</h2>
+            <p className="p5 sd-footer__address">{contact.address}</p>
           </div>
         </div>
 
-        <div className="sd-footer__center">
-          <a href={`tel:${site.phone.replace(/\s/g, "")}`} className="p3 sd-footer__contact">
-            {site.phone}
-          </a>
-          <a href={`mailto:${site.email}`} className="p3 sd-footer__contact">
-            {site.email}
-          </a>
-        </div>
+        {contact.phone || contact.email ? (
+          <div className="sd-footer__center">
+            {contact.phone ? (
+              <a
+                href={`tel:${contact.phone.replace(/\s/g, "")}`}
+                className="p3 sd-footer__contact"
+              >
+                {contact.phone}
+              </a>
+            ) : null}
+            {contact.email ? (
+              <a href={`mailto:${contact.email}`} className="p3 sd-footer__contact">
+                {contact.email}
+              </a>
+            ) : null}
+          </div>
+        ) : null}
 
         <div className="sd-footer__bot">
           <div className="sd-footer__wordmark">

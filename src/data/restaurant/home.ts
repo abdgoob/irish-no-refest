@@ -110,6 +110,13 @@ export const experiences = [
   },
 ] as const;
 
+export const contact = {
+  heading: "CONTACT",
+  address: "Austin, Texas",
+  phone: null as string | null,
+  email: null as string | null,
+} as const;
+
 export const nav = {
   menuLabel: "MENU",
   reserveLabel: "RESERVE",
@@ -128,42 +135,53 @@ export const nav = {
 } as const;
 
 export const faq = {
-  title: "ANSWERS TO KEY QUESTIONS",
-  subtitle: "Before you visit",
+  titleLead: "Answers to",
+  titleTail: "key questions",
+  subtitle: "All you need to know",
+  loadMoreLabel: "LOAD MORE",
   items: [
     {
+      id: "reservations",
       q: "DO YOU TAKE RESERVATIONS?",
       a: "Yes. We hold tables for dinner and busy match nights. Walk-ins are welcome when we have room—call ahead on weekends if you want a guaranteed spot.",
     },
     {
+      id: "hours",
       q: "WHAT ARE YOUR HOURS?",
       a: "The kitchen runs lunch through late evening; the bar often stays open after last food order. Hours shift slightly by day—check our site or socials for the current week.",
     },
     {
+      id: "dietary",
       q: "DO YOU ACCOMMODATE DIETARY NEEDS AND ALLERGIES?",
       a: "Tell your server when you sit down. We can guide you on gluten, vegetarian, and common allergens, though our kitchen handles fish, shellfish, dairy, and nuts.",
     },
     {
+      id: "live-music",
       q: "IS THERE LIVE MUSIC?",
       a: "Regular acoustic and trad sessions on select nights. There is no cover; just order from the bar or kitchen like any other evening.",
     },
     {
+      id: "private-dining",
       q: "DO YOU OFFER PRIVATE DINING OR EVENTS?",
       a: "We have a semi-private room for birthdays, team dinners, and small celebrations. Email us with your date and head count and we will send options and a set menu.",
     },
     {
+      id: "children",
       q: "ARE CHILDREN WELCOME?",
       a: "Families are welcome at lunch and early dinner. Later evenings lean toward the bar crowd; use your judgment for very young children after 8 p.m.",
     },
     {
+      id: "parking",
       q: "DO YOU HAVE PARKING?",
       a: "Street parking and nearby lots around the neighborhood. Rideshare drop-off at the front door is usually the easiest on busy nights.",
     },
     {
+      id: "takeaway",
       q: "CAN I ORDER FOOD TO GO?",
       a: "Takeaway is available for most menu items when the kitchen is open. Online ordering will be linked here when the client platform is live.",
     },
     {
+      id: "dress-code",
       q: "IS THERE A DRESS CODE?",
       a: "Come as you are—Austin casual. We only ask that guests stay comfortable and respectful of a shared dining room.",
     },

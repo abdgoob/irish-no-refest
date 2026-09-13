@@ -38,6 +38,13 @@ export const images = {
     videoLeft: "/assets/restaurant/atmosphere/prologue-left.mp4",
     videoRight: "/assets/restaurant/atmosphere/prologue-right.mp4",
   },
+  faqScene: {
+    birdsTop: "/assets/restaurant/atmosphere/faq-birds-top.mp4",
+    birdsBottom: "/assets/restaurant/atmosphere/faq-birds-bottom.mp4",
+  },
+  aboutScene: {
+    stork: "/assets/restaurant/atmosphere/about-stork.mp4",
+  },
   location: {
     waterfall: "/assets/images/location/waterfall.webp",
   },
