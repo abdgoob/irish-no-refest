@@ -3,9 +3,9 @@ import { MotionRoot } from "@/motion/core/MotionRoot";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Son Daven — Design Resort Hotel in Yaremche",
+  title: "The House — A modern Irish public house in Austin",
   description:
-    "Son Daven is a premium design resort hotel in Yaremche — investment project by blago.",
+    "A contemporary Irish public house in Austin, Texas. Good food. Good drink. Good company.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

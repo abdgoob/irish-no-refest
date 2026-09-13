@@ -18,6 +18,8 @@ export const heroFrameSources = Array.from({ length: FRAME_COUNT }, (_, i) => {
  * Local copies live under public/assets/hero/.
  */
 export const heroSceneConfig: HeroSceneConfig = {
+  // Desktop sequence is still the hotel pullback. Restaurant stills are
+  // fallback / mobile / reduced-motion only until a new frame pack exists.
   frames: heroFrameSources,
   fallbackImage: images.hero.desktop,
   mobileImage: images.hero.mobile,

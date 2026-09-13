@@ -1,6 +1,5 @@
-import { images } from "@/data/assets";
 import { MediaImage } from "@/components/ui/MediaImage";
-import { SvgBlagoMark } from "@/components/ui/SvgBlagoMark";
+import { about } from "@/data/restaurant/home";
 
 export function AboutSection() {
   return (
@@ -16,11 +15,9 @@ export function AboutSection() {
         <div className="sd-grid-12 sd-about__title-row">
           <div className="sd-col-7-13">
             <h2 className="h1 sd-about__brand" data-reveal="heading">
-              SON DAVEN
+              {about.heading}
             </h2>
-            <p className="p5 sd-about__byline">
-              by blago <SvgBlagoMark />
-            </p>
+            <p className="p5 sd-about__byline">{about.byline}</p>
           </div>
         </div>
 
@@ -29,41 +26,31 @@ export function AboutSection() {
         <div className="sd-grid-12 sd-about__copy-row">
           <div className="sd-col-4-7 sd-about__col">
             <h3 className="h4" data-reveal="heading">
-              ABOUT US
+              {about.columns[0].title}
             </h3>
             <p
               className="p5 sd-prose sd-prose--tight"
               data-reveal="paragraph"
             >
-              SON DAVEN IS A NEW PLACE OF POWER IN THE CARPATHIANS, WHERE HUTSUL
-              CULTURE IS REINTERPRETED THROUGH ARCHITECTURE, SPATIAL DESIGN,
-              HOSPITALITY, AND CONTEMPORARY ART. HERE, TRADITIONS TAKE ON A NEW
-              FORM, AND THE ANCIENT SPIRIT OF THE CARPATHIANS MERGES WITH MODERN
-              COMFORT.
+              {about.columns[0].body}
             </p>
           </div>
           <div className="sd-col-7-10 sd-about__col sd-about__col--offset">
             <div className="sd-space-c sd-only-desk" aria-hidden="true" />
             <h3 className="h4" data-reveal="heading">
-              CONCEPT
+              {about.columns[1].title}
             </h3>
             <p
               className="p5 sd-prose sd-prose--tight"
               data-reveal="paragraph"
             >
-              THE ARCHITECTURE OF THE COMPLEX GROWS FROM THE MOUNTAINS,
-              PRESERVING THEIR STRENGTH IN STONE AND WARMTH IN WOOD. PANORAMIC
-              TERRACES OPEN UP VIEWS FROM WHICH THE SPIRIT INTERCEPTS, AND
-              TRADITIONS INTERTWINE WITH MODERNITY, CREATING A NEW FORMAT OF
-              RECREATION: DEEP, MEANINGFUL, FILLED WITH THE ENERGY OF NATURE AND
-              CULTURE OF HUTSUL REGION.
+              {about.columns[1].body}
             </p>
             <p
               className="p5 sd-prose sd-prose--tight sd-about__closer"
               data-reveal="paragraph"
             >
-              A DREAM OF A PLACE WHERE LEGENDS, NATURE, AND MODERN COMFORTS COME
-              TOGETHER AS ONE
+              {about.closer}
             </p>
           </div>
         </div>
@@ -72,8 +59,8 @@ export function AboutSection() {
       <div className="sd-about__bleed" data-parallax="container-up">
         <div className="sd-about__image" data-parallax="image">
           <MediaImage
-            src={images.about.main}
-            alt="Architecture"
+            src={about.image}
+            alt={about.imageAlt}
             sizes="100vw"
           />
         </div>

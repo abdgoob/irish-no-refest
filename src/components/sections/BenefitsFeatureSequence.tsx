@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useSyncExternalStore } from "react";
-import { benefits } from "@/data/home.en";
+import { experiences } from "@/data/restaurant/home";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { ArcFeatureCarousel } from "@/components/carousel/ArcFeatureCarousel";
 import { useMotionContext } from "@/motion/core/MotionContext";
@@ -31,7 +31,7 @@ export function BenefitsFeatureSequence() {
 
   const arcItems = useMemo(
     () =>
-      benefits.map((item) => ({
+      experiences.map((item) => ({
         id: slugify(item.title),
         title: item.title,
         body: item.body,
@@ -47,7 +47,7 @@ export function BenefitsFeatureSequence() {
           items={arcItems}
           motionEnabled={enabled}
           reducedMotion={reducedMotion}
-          ariaLabel="Resort features"
+          ariaLabel="House experiences"
         />
       </div>
     );
@@ -60,7 +60,7 @@ export function BenefitsFeatureSequence() {
         data-horizontal-track
         role="list"
       >
-        {benefits.map((item, i) => (
+        {experiences.map((item, i) => (
           <article
             key={item.title}
             className="sd-benefit-card"

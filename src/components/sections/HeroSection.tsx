@@ -1,6 +1,6 @@
 import { images } from "@/data/assets";
+import { hero } from "@/data/restaurant/home";
 import { ButtonCircle } from "@/components/ui/ButtonCircle";
-import { SvgBlagoMark } from "@/components/ui/SvgBlagoMark";
 import { SvgWordmark } from "@/components/ui/SvgWordmark";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { HeroScrollScene } from "@/motion/hero/HeroScrollScene";
@@ -39,7 +39,7 @@ export function HeroSection({
     >
       <div className="sd-container sd-hero__content">
         <div className="sd-hero__cluster">
-          <p className="p3 sd-hero__title">INVESTMENT PROJECT</p>
+          <p className="p3 sd-hero__title">{hero.eyebrow}</p>
           <div className="sd-hero__logo">
             <SvgWordmark />
           </div>
@@ -47,28 +47,23 @@ export function HeroSection({
 
         <div className="sd-hero__meta">
           <div className="sd-hero__meta-left">
-            <p className="p5">DEVELOPMENT</p>
-            <p
-              className="p5"
-              style={{ display: "flex", alignItems: "center", gap: "0.5em" }}
-            >
-              BY BLAGO <SvgBlagoMark />
-            </p>
+            <p className="p5">{hero.metaLeft[0]}</p>
+            <p className="p5">{hero.metaLeft[1]}</p>
           </div>
           <div className="sd-hero__meta-center">
-            <p className="p5">DESIGN</p>
-            <p className="p5">RESORT HOTEL</p>
+            <p className="p5">{hero.metaCenter[0]}</p>
+            <p className="p5">{hero.metaCenter[1]}</p>
           </div>
           <div className="sd-hero__meta-right">
-            <p className="p5">YAREMCHE,</p>
-            <p className="p5">IVANO-FRANKIVSK</p>
+            <p className="p5">{hero.metaRight[0]}</p>
+            <p className="p5">{hero.metaRight[1]}</p>
           </div>
         </div>
       </div>
 
       <div className="sd-hero__cta-wrap">
         <ButtonCircle onClick={onInvestClick ?? onConsultationOpen}>
-          Invest in Son Daven
+          {hero.primaryCta}
         </ButtonCircle>
       </div>
     </HeroScrollScene>

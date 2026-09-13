@@ -10,7 +10,7 @@ export function ConsultationModal({
   if (!open) return null;
 
   return (
-    <div className="sd-modal theme-light" role="dialog" aria-modal="true" aria-label="Consultation">
+    <div className="sd-modal theme-light" role="dialog" aria-modal="true" aria-label="Reserve a table">
       <div className="sd-modal__inner">
         <button
           type="button"
@@ -20,7 +20,7 @@ export function ConsultationModal({
         >
           Close
         </button>
-        <h2 className="h4">Consultation</h2>
+        <h2 className="h4">Reserve a table</h2>
         <form
           className="theme-light"
           style={{ marginTop: "2rem", maxWidth: "480px" }}

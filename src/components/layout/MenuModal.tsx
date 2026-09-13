@@ -1,15 +1,6 @@
 "use client";
 
-const links = [
-  { href: "#hero", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#benefits", label: "Uniqueness" },
-  { href: "#apartments", label: "Apartments" },
-  { href: "#finance", label: "Finance" },
-  { href: "#blog", label: "News" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#contact", label: "Contact" },
-];
+import { nav } from "@/data/restaurant/home";
 
 export function MenuModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   if (!open) return null;
@@ -26,8 +17,8 @@ export function MenuModal({ open, onClose }: { open: boolean; onClose: () => voi
           Close
         </button>
         <nav style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-          {links.map((l) => (
-            <a key={l.href} href={l.href} className="h5" onClick={onClose} style={{ color: "inherit", textDecoration: "none" }}>
+          {nav.links.map((l) => (
+            <a key={l.href + l.label} href={l.href} className="h5" onClick={onClose} style={{ color: "inherit", textDecoration: "none" }}>
               {l.label}
             </a>
           ))}

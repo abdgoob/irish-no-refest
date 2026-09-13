@@ -1,4 +1,5 @@
 import { brand } from "@/data/assets";
+import { restaurant } from "@/data/restaurant/home";
 
 /** Masked SVG wordmark so `currentColor` matches source theme behavior. */
 export function SvgWordmark({ className = "" }: { className?: string }) {
@@ -6,7 +7,7 @@ export function SvgWordmark({ className = "" }: { className?: string }) {
     <span
       className={className}
       role="img"
-      aria-label="Son Daven"
+      aria-label={restaurant.name}
       style={{
         display: "block",
         width: "100%",

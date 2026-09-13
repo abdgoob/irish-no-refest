@@ -28,11 +28,11 @@ export const svg = {
 export const images = {
   noise: "/assets/images/noise.avif",
   hero: {
-    desktop: "/assets/images/hero/hero-video_00.webp",
-    mobile: "/assets/images/hero/render-2-mobile.webp",
+    desktop: "/assets/restaurant/hero/restaurant-hero-fallback.webp",
+    mobile: "/assets/restaurant/hero/restaurant-hero-mobile.webp",
   },
   about: {
-    main: "/assets/images/about/img-about.webp",
+    main: "/assets/restaurant/story/restaurant-story.webp",
   },
   location: {
     waterfall: "/assets/images/location/waterfall.webp",

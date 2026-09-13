@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { ButtonPill } from "@/components/ui/ButtonPill";
 import { SvgWordmark } from "@/components/ui/SvgWordmark";
+import { actionHref, nav, restaurant } from "@/data/restaurant/home";
 import type { HeaderTheme } from "@/motion/header/types";
 
 function headerThemeClass(theme: HeaderTheme): string {
@@ -30,17 +30,21 @@ export function SiteHeader({
             onClick={onMenuOpen}
             style={{ background: "none", border: "none", color: "inherit", cursor: "pointer" }}
           >
-            Menu
+            {nav.menuLabel}
           </button>
         </div>
-        <a href="#hero" className="sd-header__logo" aria-label="Son Daven logo">
+        <a href="#hero" className="sd-header__logo" aria-label={restaurant.name}>
           <SvgWordmark className="sd-header__logo" />
         </a>
         <div className="sd-header__side sd-header__side--right">
-          <Link href="/" className="p5" style={{ color: "inherit", textDecoration: "none" }}>
-            UA
-          </Link>
-          <ButtonPill onClick={onConsultationOpen}>Consultation</ButtonPill>
+          <a
+            href={actionHref("order")}
+            className="p5"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            {nav.orderHeaderLabel}
+          </a>
+          <ButtonPill onClick={onConsultationOpen}>{nav.reserveLabel}</ButtonPill>
         </div>
       </div>
     </header>
