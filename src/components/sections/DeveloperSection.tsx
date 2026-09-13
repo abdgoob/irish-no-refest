@@ -1,6 +1,6 @@
-import { images } from "@/data/assets";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { SvgBlagoMark } from "@/components/ui/SvgBlagoMark";
+import { houseCraft } from "@/data/restaurant/home";
 
 export function DeveloperSection() {
   return (
@@ -11,17 +11,14 @@ export function DeveloperSection() {
       data-header-theme="dark"
     >
       <div className="sd-developer__scene" aria-hidden="true">
-        <MediaImage src={images.footer.mountain} alt="" sizes="100vw" />
+        <MediaImage src={houseCraft.image} alt="" sizes="100vw" />
       </div>
 
       <div className="sd-container">
         <div className="sd-grid-12">
           <div className="sd-col-3-11 sd-developer__lead">
-            <p className="p3">DEVELOPER</p>
-            <h2 className="h3 sd-developer__title">
-              A LEGEND BROUGHT TO LIFE IN THE VERY HEART OF THE CARPATHIANS,
-              UNITING PAST AND FUTURE
-            </h2>
+            <p className="p3">{houseCraft.eyebrow}</p>
+            <h2 className="h3 sd-developer__title">{houseCraft.title}</h2>
           </div>
         </div>
 
@@ -29,21 +26,16 @@ export function DeveloperSection() {
 
         <div className="sd-grid-12">
           <div className="sd-col-5-9 sd-developer__card">
-            <p className="p4 sd-prose">
-              urban tech developer creates a future-ready environment where real
-              estate means more than just square meters. It’s a combination of
-              services, infrastructure, and people-focused care, which shapes a
-              new standard of living.
-            </p>
+            <p className="p4 sd-prose">{houseCraft.body}</p>
           </div>
         </div>
 
         <div className="sd-developer__lockup">
           <SvgBlagoMark className="sd-developer__mark" />
           <p className="p3">
-            urban tech
+            {houseCraft.lockupLines[0]}
             <br />
-            developer
+            {houseCraft.lockupLines[1]}
           </p>
         </div>
       </div>

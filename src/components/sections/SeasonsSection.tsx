@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { images } from "@/data/assets";
+import { foodDrinks } from "@/data/restaurant/home";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { ButtonPill } from "@/components/ui/ButtonPill";
 import { registerGsapPlugins, useGSAP } from "@/motion/core/gsap";
@@ -13,6 +13,7 @@ import {
 } from "@/motion/patterns/DualMediaTabSwitch";
 import { gsap } from "@/motion/core/gsap";
 
+/** Internal IDs stay summer/winter so DualMedia CSS + motion stay intact. */
 type SeasonId = "summer" | "winter";
 
 export function SeasonsSection({
@@ -62,7 +63,7 @@ export function SeasonsSection({
           <div
             className="sd-seasons__tabs"
             role="tablist"
-            aria-label="Season"
+            aria-label={foodDrinks.ariaLabel}
           >
             <button
               type="button"
@@ -75,7 +76,7 @@ export function SeasonsSection({
               data-tab-trigger="summer"
               onClick={() => onSeasonSelect("summer")}
             >
-              Summer
+              {foodDrinks.food.tab}
             </button>
             <button
               type="button"
@@ -88,7 +89,7 @@ export function SeasonsSection({
               data-tab-trigger="winter"
               onClick={() => onSeasonSelect("winter")}
             >
-              winter
+              {foodDrinks.drinks.tab}
             </button>
           </div>
         </div>
@@ -100,7 +101,7 @@ export function SeasonsSection({
               data-tab-media="summer"
               aria-hidden={season !== "summer"}
             >
-              <MediaImage src={images.seasons.summer} alt="" sizes="100vw" />
+              <MediaImage src={foodDrinks.food.image} alt="" sizes="100vw" />
               <div className="sd-seasons__veil" aria-hidden="true" />
             </div>
             <div
@@ -108,7 +109,7 @@ export function SeasonsSection({
               data-tab-media="winter"
               aria-hidden={season !== "winter"}
             >
-              <MediaImage src={images.seasons.winter} alt="" sizes="100vw" />
+              <MediaImage src={foodDrinks.drinks.image} alt="" sizes="100vw" />
               <div className="sd-seasons__veil" aria-hidden="true" />
             </div>
           </div>
@@ -124,11 +125,7 @@ export function SeasonsSection({
                   data-tab-panel="summer"
                   inert={season !== "summer" ? true : undefined}
                 >
-                  <p className="h5 sd-seasons__copy">
-                    SUMMER TURNS THIS AREA INTO AN EXCITING ADVENTURE MAP: HIKING
-                    TRAILS, MOUNTAIN RIVER RAFTING, CULTURAL FESTIVALS, AND
-                    CULINARY JOURNEYS.
-                  </p>
+                  <p className="h5 sd-seasons__copy">{foodDrinks.food.copy}</p>
                 </div>
                 <div
                   className={`sd-seasons__copy-panel${season === "winter" ? " is-visible" : ""}`}
@@ -139,15 +136,17 @@ export function SeasonsSection({
                   inert={season !== "winter" ? true : undefined}
                 >
                   <div className="sd-seasons__km">
-                    <p className="h1">35 km</p>
+                    <p className="h1">{foodDrinks.drinks.heading}</p>
                     <p className="p4 sd-seasons__km-note">
-                      to Bukovel, ensuring a steady flow of guests in winter.
+                      {foodDrinks.drinks.note}
                     </p>
                   </div>
                 </div>
                 {onConsultationOpen ? (
                   <div className="sd-seasons__cta">
-                    <ButtonPill onClick={onConsultationOpen}>Consultation</ButtonPill>
+                    <ButtonPill onClick={onConsultationOpen}>
+                      {foodDrinks.cta}
+                    </ButtonPill>
                   </div>
                 ) : null}
               </div>

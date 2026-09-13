@@ -17,7 +17,8 @@ export const urls = {
   fallbacks: {
     reserve: "#hero",
     order: "#benefits",
-    menu: "#benefits",
+    /** Menu browser still lives on the apartments section ID. */
+    menu: "#apartments",
   },
 } as const;
 
@@ -121,10 +122,132 @@ export const nav = {
     { href: "#benefits", label: "The House" },
     { href: actionHref("menu"), label: "Menu" },
     { href: actionHref("order"), label: "Order" },
-    { href: "#apartments", label: "Apartments" },
     { href: "#finance", label: "Finance" },
     { href: "#blog", label: "News" },
     { href: "#faq", label: "FAQ" },
     { href: "#contact", label: "Contact" },
   ],
+} as const;
+
+/** TEMPORARY DEMO COPY — REPLACE WITH CLIENT CONTENT */
+export const menuHead = {
+  eyebrow: "+++ THE MENU +++",
+  title: "MADE FOR THE TABLE.",
+  note: "An editorial look at the house — not a live client menu.",
+  typesLabel: "THE TABLE",
+  examplesLabel: "A few of the plates.",
+  cta: "VIEW FULL MENU",
+} as const;
+
+export type MenuCategoryId =
+  | "starters"
+  | "classics"
+  | "mains"
+  | "burgers"
+  | "desserts"
+  | "drinks";
+
+export const menuTabOrder: MenuCategoryId[] = [
+  "starters",
+  "classics",
+  "mains",
+  "burgers",
+  "desserts",
+  "drinks",
+];
+
+/** TEMPORARY DEMO COPY — REPLACE WITH CLIENT CONTENT */
+export const menuCategories: Record<
+  MenuCategoryId,
+  {
+    label: string;
+    statement: string;
+    line: string;
+    body: string;
+    image: string;
+    /** Placeholder names for layout balance only. Not a real menu. */
+    examples: readonly string[];
+    demo: true;
+  }
+> = {
+  starters: {
+    demo: true,
+    label: "STARTERS",
+    statement: "For the middle of the table.",
+    line: "Bread, small plates, things to share.",
+    body: "A few dishes to open the evening — meant to be reached for, not plated for one.",
+    image: "/assets/restaurant/menu/menu-starters.webp",
+    examples: ["Soda bread", "Cultured butter", "Smoked salmon"],
+  },
+  classics: {
+    demo: true,
+    label: "IRISH CLASSICS",
+    statement: "The dishes worth coming back for.",
+    line: "Comforting. Generous. Familiar.",
+    body: "The house plates — rich, unfussy, and built for a proper sitting.",
+    image: "/assets/restaurant/menu/menu-irish-classics.webp",
+    examples: ["Cottage pie", "Dark gravy", "Greens"],
+  },
+  mains: {
+    demo: true,
+    label: "MAINS",
+    statement: "Made properly. Served generously.",
+    line: "Roasts, fish, the larger plates.",
+    body: "Food that arrives as if someone in the kitchen still believes in a full plate.",
+    image: "/assets/restaurant/menu/menu-mains.webp",
+    examples: ["Roast chicken", "Seasonal greens", "Herb jus"],
+  },
+  burgers: {
+    demo: true,
+    label: "BURGERS",
+    statement: "Public-house comfort, done with care.",
+    line: "A bun, a proper patty, hand-cut chips.",
+    body: "Not a stunt. Just a burger that belongs in this room.",
+    image: "/assets/restaurant/menu/menu-burgers.webp",
+    examples: ["House burger", "Hand-cut chips"],
+  },
+  desserts: {
+    demo: true,
+    label: "DESSERTS",
+    statement: "Save a little room.",
+    line: "Warm, dark, and worth the wait.",
+    body: "Something sweet after the plates are cleared — still of the house, not a pastry case.",
+    image: "/assets/restaurant/menu/menu-desserts.webp",
+    examples: ["Sticky toffee", "Warm sauce", "Cream"],
+  },
+  drinks: {
+    demo: true,
+    label: "DRINKS",
+    statement: "A proper pint and something stronger.",
+    line: "Stout. Whiskey. A late cocktail.",
+    body: "Poured with patience, then left alone to do their work.",
+    image: "/assets/restaurant/menu/menu-drinks.webp",
+    examples: ["Stout", "Whiskey", "Cocktails"],
+  },
+};
+
+/** TEMPORARY DEMO COPY — REPLACE WITH CLIENT CONTENT */
+export const foodDrinks = {
+  ariaLabel: "Food and drinks",
+  food: {
+    tab: "FOOD",
+    copy: "PLATES FOR THE WHOLE TABLE. Food that arrives generous, familiar, and worth reaching across for.",
+    image: "/assets/restaurant/states/restaurant-food-state.webp",
+  },
+  drinks: {
+    tab: "DRINKS",
+    heading: "POURED",
+    note: "PROPERLY. A pint with patience. Cocktails after dark. Something stronger when the table stays late.",
+    image: "/assets/restaurant/states/restaurant-drinks-state.webp",
+  },
+  cta: "RESERVE",
+} as const;
+
+/** TEMPORARY DEMO COPY — REPLACE WITH CLIENT CONTENT */
+export const houseCraft = {
+  eyebrow: "THE KITCHEN",
+  title: "COOK WITH CARE. SERVE WITH GENEROSITY.",
+  body: "A modern public house still depends on simple things done properly: a kitchen that respects the ingredients, a bar that respects the pour, and a room that makes people want to stay.",
+  image: "/assets/restaurant/atmosphere/restaurant-heritage-bg.webp",
+  lockupLines: ["THE HOUSE", "AUSTIN"],
 } as const;

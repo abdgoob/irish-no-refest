@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { images } from "@/data/assets";
 import { site } from "@/data/home.en";
+import { restaurant } from "@/data/restaurant/home";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { SvgWordmark } from "@/components/ui/SvgWordmark";
 import { registerGsapPlugins, useGSAP } from "@/motion/core/gsap";
@@ -94,7 +95,7 @@ export function FooterScrollScene() {
           <div className="sd-footer__wordmark">
             <SvgWordmark />
           </div>
-          <p className="p6">© 2026 SON DAVEN. ALL RIGHTS RESERVED</p>
+          <p className="p6">© 2026 {restaurant.name.toUpperCase()}. ALL RIGHTS RESERVED</p>
           <div className="sd-footer__links p6">
             <a href="https://www.instagram.com/">Instagram</a>
             <a href="https://www.facebook.com/">Facebook</a>

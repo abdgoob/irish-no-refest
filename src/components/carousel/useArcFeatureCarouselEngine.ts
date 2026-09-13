@@ -11,6 +11,14 @@ function clamp(n: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, n));
 }
 
+/** Shortest signed offset on a loop of `count` items. */
+function wrapOffset(index: number, current: number, count: number): number {
+  if (count <= 0) return index - current;
+  let offset = index - current;
+  offset -= count * Math.round(offset / count);
+  return offset;
+}
+
 export function computeArcGeometry(
   stageWidth: number,
   stageHeight: number,
@@ -119,7 +127,8 @@ export function useArcFeatureCarouselEngine({
         const el = cardEls[i];
         if (!el) continue;
 
-        const angle = (i - cardWheel[i]) * geometry.step;
+        const offset = wrapOffset(i, cardWheel[i], itemCount);
+        const angle = offset * geometry.step;
         const absAngle = Math.abs(angle);
         const visible = absAngle <= geometry.visibleMaxAngle;
 
@@ -134,7 +143,7 @@ export function useArcFeatureCarouselEngine({
         const y =
           geometry.centerY - Math.cos(angle) * geometry.radius - geometry.cardHeight / 2;
         const rotDeg = (angle * 180) / Math.PI;
-        const dist = Math.abs(i - wheelCurrent);
+        const dist = Math.abs(wrapOffset(i, wheelCurrent, itemCount));
         const scale = clamp(1.04 - dist * 0.045 - absAngle * 0.06, 0.78, 1.04);
         const opacity = clamp(1 - (absAngle / geometry.visibleMaxAngle) * 0.55, 0.35, 1);
 
@@ -170,11 +179,24 @@ export function useArcFeatureCarouselEngine({
       const masterAlpha = 1 - Math.exp(-config.smoothing * dt);
       wheelCurrent += (wheelTarget - wheelCurrent) * masterAlpha;
 
+      if (itemCount > 0 && Math.abs(wheelCurrent) > itemCount * 4) {
+        const wrapped =
+          ((wheelCurrent % itemCount) + itemCount) % itemCount;
+        const shift = wheelCurrent - wrapped;
+        wheelCurrent = wrapped;
+        wheelTarget -= shift;
+        for (let i = 0; i < itemCount; i++) {
+          cardWheel[i] -= shift;
+        }
+      }
+
       for (let i = 0; i < itemCount; i++) {
-        const dist = Math.abs(i - wheelCurrent);
+        const dist = Math.abs(wrapOffset(i, wheelCurrent, itemCount));
         const lag = config.smoothing / (1 + dist * 0.55);
         const alpha = 1 - Math.exp(-lag * dt);
-        cardWheel[i] += (wheelCurrent - cardWheel[i]) * alpha;
+        let delta = wheelCurrent - cardWheel[i];
+        delta -= itemCount * Math.round(delta / itemCount);
+        cardWheel[i] += delta * alpha;
       }
 
       layoutCards();

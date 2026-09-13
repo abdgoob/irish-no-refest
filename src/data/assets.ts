@@ -6,8 +6,8 @@ export const fonts = {
 } as const;
 
 export const brand = {
-  wordmark: "/assets/svg/brand/son-daven-wordmark.svg",
-  blagoMark: "/assets/svg/brand/blago-mark.svg",
+  wordmark: "/assets/restaurant/brand/demo-pub-wordmark.svg",
+  blagoMark: "/assets/restaurant/brand/demo-pub-mark.svg",
 } as const;
 
 export const svg = {

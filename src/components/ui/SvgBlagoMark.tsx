@@ -1,11 +1,12 @@
 import { brand } from "@/data/assets";
+import { restaurant } from "@/data/restaurant/home";
 
 export function SvgBlagoMark({ className = "" }: { className?: string }) {
   return (
     <span
       className={className}
       role="img"
-      aria-label="blago"
+      aria-label={restaurant.name}
       style={{
         display: "inline-block",
         width: "1.25em",

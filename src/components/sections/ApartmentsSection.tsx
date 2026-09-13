@@ -1,8 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { useRef, useState } from "react";
-import { apartments, type ApartmentId } from "@/data/home.en";
+import {
+  actionHref,
+  menuCategories,
+  menuHead,
+  menuTabOrder,
+  type MenuCategoryId,
+} from "@/data/restaurant/home";
 import { SectionShell } from "@/components/layout/SectionShell";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { ButtonPill } from "@/components/ui/ButtonPill";
@@ -13,47 +18,30 @@ import {
   getCategoryTabPanelHandle,
 } from "@/motion/patterns/CategoryTabPanel";
 
-const tabOrder: ApartmentId[] = [
-  "studio",
-  "deluxe",
-  "superior",
-  "suite",
-  "family",
-  "penthouse",
-];
-
-function ApartmentPanel({ id }: { id: ApartmentId }) {
-  const apt = apartments[id];
+function MenuPanel({ id }: { id: MenuCategoryId }) {
+  const category = menuCategories[id];
 
   return (
     <>
       <div>
         <div className="sd-apartments__media">
-          <MediaImage src={apt.image} alt={apt.label} sizes="60vw" />
+          <MediaImage src={category.image} alt={category.label} sizes="60vw" />
         </div>
-        <div className="sd-apartments__layout">
-          <Image
-            src={apt.layoutSvg}
-            alt={`${apt.label} layout`}
-            width={400}
-            height={300}
-            style={{ width: "100%", height: "auto" }}
-          />
-        </div>
+        <div className="sd-apartments__layout" aria-hidden="true" />
       </div>
       <div>
-        <h3 className="h3">{apt.label}</h3>
-        <p className="h4 sd-apartments__price">{apt.price}</p>
-        <p className="p4 sd-apartments__meta">{apt.guests}</p>
-        <p className="p4 sd-apartments__meta">{apt.area}</p>
+        <h3 className="h3">{category.label}</h3>
+        <p className="h4 sd-apartments__price">{category.statement}</p>
+        <p className="p4 sd-apartments__meta">{category.line}</p>
+        <p className="p4 sd-apartments__meta">{menuHead.examplesLabel}</p>
         <ul className="p5 sd-apartments__features">
-          {apt.features.map((f) => (
-            <li key={f}>{f}</li>
+          {category.examples.map((item) => (
+            <li key={item}>{item}</li>
           ))}
         </ul>
-        <p className="p5 sd-apartments__description">{apt.description}</p>
+        <p className="p5 sd-apartments__description">{category.body}</p>
         <div className="sd-apartments__inquire">
-          <ButtonPill href="mailto:sale@sondaven.com">Inquire about pricing</ButtonPill>
+          <ButtonPill href={actionHref("menu")}>{menuHead.cta}</ButtonPill>
         </div>
       </div>
     </>
@@ -61,7 +49,7 @@ function ApartmentPanel({ id }: { id: ApartmentId }) {
 }
 
 export function ApartmentsSection() {
-  const [active, setActive] = useState<ApartmentId>("studio");
+  const [active, setActive] = useState<MenuCategoryId>("starters");
   const tabsRef = useRef<HTMLDivElement>(null);
   const { enhanced, ready } = useMotionContext();
   const motionTabs = enhanced && ready;
@@ -78,7 +66,7 @@ export function ApartmentsSection() {
     { scope: tabsRef, dependencies: [motionTabs] },
   );
 
-  const onTabSelect = (id: ApartmentId) => {
+  const onTabSelect = (id: MenuCategoryId) => {
     const root = tabsRef.current;
     if (motionTabs && root) {
       const handle = getCategoryTabPanelHandle(root);
@@ -90,22 +78,18 @@ export function ApartmentsSection() {
 
   return (
     <SectionShell id="apartments" theme="light" className="sd-apartments">
-      <p className="p3">APARTMENTS</p>
-      <p className="p4 sd-apartments__intro">
-        ONE- TO THREE-BEDROOM UNITS DESIGNED FOR SOLO TRAVELERS, COUPLES, OR FAMILIES. PANORAMIC WINDOWS, SPACIOUS TERRACES, AND NATURAL TEXTURES AND MATERIALS ELEVATE THE EXPERIENCE OF A CARPATHIAN GETAWAY.
-      </p>
-      <p className="p5 sd-apartments__note">
-        The design features Hutsul touches that bring genuine authenticity to the space.
-      </p>
-      <p className="p3 sd-apartments__types-label">TYPES</p>
+      <p className="p3">{menuHead.eyebrow}</p>
+      <p className="p4 sd-apartments__intro">{menuHead.title}</p>
+      <p className="p5 sd-apartments__note">{menuHead.note}</p>
+      <p className="p3 sd-apartments__types-label">{menuHead.typesLabel}</p>
 
       <div ref={tabsRef} data-category-tabs>
         <div
           className="sd-apartments__tabs"
           role="tablist"
-          aria-label="Apartment types"
+          aria-label="Menu categories"
         >
-          {tabOrder.map((id) => (
+          {menuTabOrder.map((id) => (
             <button
               key={id}
               type="button"
@@ -118,13 +102,13 @@ export function ApartmentsSection() {
               data-tab-trigger={id}
               onClick={() => onTabSelect(id)}
             >
-              {apartments[id].label}
+              {menuCategories[id].label}
             </button>
           ))}
         </div>
 
         <div className="sd-apartments__panel" data-category-stage>
-          {tabOrder.map((id) => (
+          {menuTabOrder.map((id) => (
             <div
               key={id}
               className="sd-apartments__panel-inner"
@@ -136,7 +120,7 @@ export function ApartmentsSection() {
               aria-hidden={active !== id}
               inert={active !== id ? true : undefined}
             >
-              <ApartmentPanel id={id} />
+              <MenuPanel id={id} />
             </div>
           ))}
         </div>
