@@ -31,7 +31,9 @@ export async function bindHighlightScrubText(
     tween?.kill();
 
     const { split, revert } = await createManagedSplit(element, {
-      type: "chars",
+      type: "words,chars",
+      wordsClass: "sd-highlight-scrub-word",
+      charsClass: "sd-highlight-scrub-char",
       autoSplit: options.autoSplit ?? true,
     });
     cleanupSplit = revert;

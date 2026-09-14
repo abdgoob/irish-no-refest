@@ -637,9 +637,14 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
   letter-spacing: 0.12em;
 }
 
+.sd-highlight-scrub-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
 .sd-prolog__quote {
   width: 100%;
-  max-width: calc(780rem / var(--scale-ratio));
+  max-width: calc(860rem / var(--scale-ratio));
   margin-top: calc(48rem / var(--scale-ratio));
   margin-inline: auto;
   text-align: center;
@@ -765,7 +770,8 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
 
 .sd-about {
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   padding-top: 0;
   padding-bottom: 0;
   margin-top: calc(-72rem / var(--scale-ratio));
@@ -777,8 +783,9 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
   left: 0;
   right: 0;
   z-index: 1;
-  height: min(44vh, calc(440rem / var(--scale-ratio)));
-  max-height: calc(440rem / var(--scale-ratio));
+  height: min(54vh, calc(540rem / var(--scale-ratio)));
+  max-height: calc(540rem / var(--scale-ratio));
+  overflow: visible;
   pointer-events: none;
 }
 
@@ -1681,8 +1688,104 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
 
 .sd-faq {
   position: relative;
-  padding-block: calc(96rem / var(--scale-ratio));
-  overflow: hidden;
+  padding-block: 0;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.sd-faq-glyph-portal {
+  width: calc(100% + var(--page-gutter) * 2);
+  max-width: none;
+  margin-inline: calc(var(--page-gutter) * -1);
+  font-family: var(--font-body);
+  padding-top: var(--gp-scroll-lead, 0px);
+  box-sizing: border-box;
+}
+
+.sd-faq-glyph-portal [data-gp-caption] {
+  inset: calc(var(--gp-word-bottom, 50%) + calc(48rem / var(--scale-ratio))) 8% auto;
+  justify-content: center;
+}
+
+.sd-faq-glyph-portal [data-gp-hint] {
+  display: none;
+}
+
+.sd-faq-glyph-portal [data-gp-enter] {
+  font-family: var(--font-body);
+  font-size: var(--p5-size);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a89474;
+  border: 1px solid rgb(168 148 116 / 0.45);
+  border-radius: 999px;
+  padding: 0 calc(20rem / var(--scale-ratio));
+  min-height: calc(44rem / var(--scale-ratio));
+}
+
+.sd-faq-glyph-portal [data-gp-enter]:focus-visible {
+  outline: 2px solid #a89474;
+  outline-offset: 4px;
+}
+
+.sd-faq-glyph-portal__birds {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.55s ease,
+    visibility 0.55s ease;
+}
+
+.sd-faq-glyph-portal__birds--off {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.sd-faq-glyph-portal__birds .sd-faq__scene-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sd-faq-glyph-portal__front {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--gp-word-top, 35%);
+  height: calc(var(--gp-word-bottom, 50%) - var(--gp-word-top, 35%));
+  display: flex;
+  align-items: flex-end;
+  padding-inline: var(--page-gutter);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.sd-faq-glyph-portal__title-grid {
+  width: 100%;
+  align-items: end;
+}
+
+.sd-faq-glyph-portal__lead,
+.sd-faq-glyph-portal__subtitle {
+  margin: 0;
+  color: rgb(168 148 116 / 0.92);
+}
+
+.sd-faq-glyph-portal [data-gp-content] {
+  padding: calc(48rem / var(--scale-ratio)) var(--page-gutter);
+  min-height: 0;
+}
+
+.sd-faq-glyph-portal__after {
+  min-height: calc(24rem / var(--scale-ratio));
+}
+
+@media (max-width: 991px) {
+  .sd-faq-glyph-portal__lead.sd-faq__title-desc--1 {
+    grid-column: 3 / 11;
+    text-align: center;
+  }
 }
 
 .sd-faq__wrap {
@@ -1770,6 +1873,7 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: visible;
 }
 
 .sd-faq__scene-canvas {
