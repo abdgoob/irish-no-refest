@@ -37,7 +37,7 @@ export function HomePage() {
       />
       <main>
         <EditorialMotionLayer />
-        <HeroSection onConsultationOpen={() => setConsultationOpen(true)} />
+        <HeroSection />
         <PrologueSection />
         <AboutTransition />
         <AboutSection />

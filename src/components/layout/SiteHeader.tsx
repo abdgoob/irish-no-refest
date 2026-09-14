@@ -1,8 +1,8 @@
 "use client";
 
 import { ButtonPill } from "@/components/ui/ButtonPill";
-import { SvgWordmark } from "@/components/ui/SvgWordmark";
-import { actionHref, nav, restaurant } from "@/data/restaurant/home";
+import styles from "./SiteHeader.module.css";
+import { actionHref, nav } from "@/data/restaurant/home";
 import type { HeaderTheme } from "@/motion/header/types";
 
 function headerThemeClass(theme: HeaderTheme): string {
@@ -21,29 +21,25 @@ export function SiteHeader({
   onConsultationOpen: () => void;
 }) {
   return (
-    <header className={`sd-header ${headerThemeClass(theme)}`}>
-      <div className="sd-header__inner">
-        <div className="sd-header__side">
+    <header className={`sd-header ${headerThemeClass(theme)} ${styles.header}`}>
+      <div className={styles.inner}>
+        <nav className={styles.navigation} aria-label="Main navigation">
           <button
             type="button"
-            className="p5"
+            className={styles.menu}
             onClick={onMenuOpen}
             style={{ background: "none", border: "none", color: "inherit", cursor: "pointer" }}
           >
+            <span className={styles.hamburger} aria-hidden="true" />
             {nav.menuLabel}
           </button>
-        </div>
-        <a href="#hero" className="sd-header__logo" aria-label={restaurant.name}>
-          <SvgWordmark className="sd-header__logo" />
-        </a>
-        <div className="sd-header__side sd-header__side--right">
-          <a
-            href={actionHref("order")}
-            className="p5"
-            style={{ color: "inherit", textDecoration: "none" }}
-          >
-            {nav.orderHeaderLabel}
-          </a>
+          <a href={actionHref("menu")}>FOOD</a>
+          <a href="#benefits">DRINKS</a>
+          <a href="#contact">VISIT</a>
+        </nav>
+        <a href="#hero" className={styles.brand} aria-label="Norefest home">NOREFEST</a>
+        <div className={styles.actions}>
+          <span lang="en" aria-label="Language: English">EN</span>
           <ButtonPill onClick={onConsultationOpen}>{nav.reserveLabel}</ButtonPill>
         </div>
       </div>

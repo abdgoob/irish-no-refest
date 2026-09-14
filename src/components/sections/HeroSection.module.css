@@ -1,0 +1,44 @@
+.overlay { position: absolute; inset: 0; color: #c9b38e; pointer-events: none; }
+.overlay p { margin: 0; }
+.center { position: absolute; top: 30.5%; left: 16.5%; width: 67%; text-align: center; }
+.eyebrow { font-size: clamp(14px, 1.25vw, 25px); letter-spacing: .32em; }
+.wordmark { margin: 16px -1.6% 20px; line-height: 1; }
+.wordmark svg { display: block; width: 100%; overflow: visible; fill: currentColor; }
+.wordmark text { font-family: "Arial Black", Impact, sans-serif; font-size: 200px; font-weight: 1000; }
+.tagline { font-size: clamp(11px, .95vw, 19px); letter-spacing: .34em; }
+.belong, .goodTimes p { font-size: clamp(10px, .72vw, 14px); line-height: 1.4; }
+.belong { position: absolute; top: 34%; left: 3.65%; }
+.belong::after, .goodTimes p::after { content: ""; display: block; width: 26px; height: 1px; margin-top: 18px; background: currentColor; opacity: .65; }
+.goodTimes { position: absolute; top: 15%; right: 4.9%; display: flex; align-items: center; gap: 30px; }
+.compass { display: block; position: relative; width: 7.2vw; aspect-ratio: 1; border: 1px solid #c9b38e80; border-radius: 50%; }
+.compass::before, .compass::after, .locationMark::before, .locationMark::after { content: ""; position: absolute; background: currentColor; opacity: .65; }
+.compass::before { width: 1px; height: 56%; left: 50%; top: 18%; }
+.compass::after { height: 1px; width: 50%; left: 25%; top: 50%; }
+.wallWords { position: absolute; right: 6.5%; top: 49%; font-family: Georgia, serif; font-size: clamp(12px, 1.05vw, 22px); line-height: 1.65; letter-spacing: .035em; }
+.bottom { position: absolute; bottom: 9%; left: 2.5%; right: 6.2%; display: flex; align-items: center; gap: 28px; font-size: clamp(11px, .95vw, 18px); white-space: nowrap; }
+.rule { flex: 1; height: 1px; background: currentColor; opacity: .65; }
+.endRule { width: 5.5vw; height: 1px; background: currentColor; opacity: .65; }
+.locationMark { position: relative; width: 32px; height: 32px; border: 1px solid currentColor; border-radius: 50%; margin-right: 10px; flex-shrink: 0; }
+.locationMark::before { width: 1px; height: 50px; top: -10px; left: 15px; }
+.locationMark::after { height: 1px; width: 50px; left: -10px; top: 15px; }
+.wave { position: absolute; left: .3%; top: 15.5%; width: 25%; display: flex; align-items: center; justify-content: space-between; opacity: .6; }
+.wave i { width: 1px; background: linear-gradient(currentColor, #c9b38e18); }
+.waveBottom { top: auto; left: auto; right: .4%; bottom: 5%; width: 12%; }
+@media (max-width: 700px) {
+  .center { top: 39%; left: 5%; width: 90%; }
+  .eyebrow { font-size: 14px; }
+  .wordmark { margin-block: 22px; }
+  .tagline { font-size: 10px; letter-spacing: .19em; }
+  .belong { left: 6%; top: 24%; }
+  .goodTimes { top: 23%; right: 6%; gap: 14px; }
+  .compass { width: 62px; }
+  .wave { top: 23%; width: 38%; opacity: .25; }
+  .waveBottom { top: auto; bottom: 5%; width: 24%; }
+  .wallWords { right: 7%; top: 65%; font-size: 12px; }
+  .bottom { left: 6%; right: 6%; bottom: 6%; flex-wrap: wrap; gap: 16px; font-size: 11px; }
+  .bottom p:last-of-type { width: 100%; padding-left: 48px; }
+  .locationMark { width: 24px; height: 24px; margin-right: 0; }
+  .locationMark::before { height: 36px; top: -7px; left: 11px; }
+  .locationMark::after { width: 36px; left: -7px; top: 11px; }
+  .endRule { display: none; }
+}
