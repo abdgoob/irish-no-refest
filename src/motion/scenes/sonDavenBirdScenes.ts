@@ -97,20 +97,33 @@ function aboutLayers(t: number): VideoLayer[] {
 function observeScenePlayback(
   canvas: HTMLCanvasElement,
   timeline: gsap.core.Timeline,
+  extraTargets: Element[] = [],
 ): IntersectionObserver {
+  const visibleTargets = new Set<Element>();
+
+  const syncPlayback = () => {
+    if (visibleTargets.size > 0) {
+      if (timeline.paused()) timeline.play();
+    } else if (!timeline.paused()) {
+      timeline.pause();
+    }
+  };
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          if (timeline.paused()) timeline.play();
-        } else if (!timeline.paused()) {
-          timeline.pause();
-        }
+        if (entry.isIntersecting) visibleTargets.add(entry.target);
+        else visibleTargets.delete(entry.target);
       });
+      syncPlayback();
     },
-    { threshold: 0.01, rootMargin: "20% 0px 20% 0px" },
+    { threshold: 0, rootMargin: "12% 0px 12% 0px" },
   );
+
   observer.observe(canvas);
+  extraTargets.forEach((el) => observer.observe(el));
+  syncPlayback();
+
   return observer;
 }
 
@@ -118,6 +131,7 @@ function mountScene(
   canvas: HTMLCanvasElement,
   layers: VideoLayer[],
   buildTimeline: (layers: VideoLayer[]) => gsap.core.Timeline,
+  extraPlaybackTargets: Element[] = [],
 ): (() => void) | null {
   if (typeof window === "undefined") return null;
 
@@ -125,10 +139,14 @@ function mountScene(
   if (!scene) return null;
 
   const timeline = buildTimeline(layers);
-  const observer = observeScenePlayback(canvas, timeline);
+  let observer: IntersectionObserver | null = null;
+
+  void scene.loaded.then(() => {
+    observer = observeScenePlayback(canvas, timeline, extraPlaybackTargets);
+  });
 
   return () => {
-    observer.disconnect();
+    observer?.disconnect();
     timeline.kill();
     scene.destroy();
   };
@@ -162,8 +180,14 @@ export function mountSonDavenAboutBirdScene(
 ): (() => void) | null {
   const t = bandPercent();
   const layers = aboutLayers(t);
+  const transition = document.querySelector(".sd-about-transition");
+  const section = canvas.closest("#about");
+  const extraTargets = [transition, section].filter(Boolean) as Element[];
 
-  return mountScene(canvas, layers, (layerConfigs) =>
+  return mountScene(
+    canvas,
+    layers,
+    (layerConfigs) =>
     gsap
       .timeline({ paused: true })
       .to(layerConfigs[0].config, {
@@ -186,5 +210,6 @@ export function mountSonDavenAboutBirdScene(
         },
         "<",
       ),
+    extraTargets,
   );
 }

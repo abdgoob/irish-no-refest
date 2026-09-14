@@ -11,9 +11,7 @@ export function AboutSection() {
       data-header-theme="light"
     >
       <AboutBirdsScene />
-      <div className="sd-container">
-        <div className="sd-space-c sd-only-desk" aria-hidden="true" />
-
+      <div className="sd-container sd-about__content">
         <div className="sd-grid-12 sd-about__title-row">
           <div className="sd-col-7-13">
             <h2 className="h1 sd-about__brand" data-reveal="heading">

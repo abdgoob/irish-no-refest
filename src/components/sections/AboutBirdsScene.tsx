@@ -9,8 +9,8 @@ export function AboutBirdsScene() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const section = canvas?.closest("#about");
-    if (!canvas || !section) return;
+    const intro = canvas?.closest(".sd-about__intro");
+    if (!canvas || !intro) return;
 
     const desktopMq = window.matchMedia(
       `(min-width: ${BREAKPOINT_DESKTOP}px)`,
@@ -23,15 +23,15 @@ export function AboutBirdsScene() {
         teardown = undefined;
         return;
       }
-      if (teardown) return;
-      const { width, height } = section.getBoundingClientRect();
+      const { width, height } = intro.getBoundingClientRect();
       if (width < 16 || height < 16) return;
+      if (teardown) return;
       const mounted = mountSonDavenAboutBirdScene(canvas);
       if (mounted) teardown = mounted;
     };
 
     const resizeObserver = new ResizeObserver(() => sync());
-    resizeObserver.observe(section);
+    resizeObserver.observe(intro);
     desktopMq.addEventListener("change", sync);
     sync();
     requestAnimationFrame(() => sync());
@@ -44,12 +44,14 @@ export function AboutBirdsScene() {
   }, []);
 
   return (
-    <div className="sd-about__scene sd-only-desk" aria-hidden>
-      <canvas
-        ref={canvasRef}
-        className="sd-about__scene-canvas scene"
-        data-about-scene=""
-      />
+    <div className="sd-about__intro sd-only-desk" aria-hidden="true">
+      <div className="sd-about__scene">
+        <canvas
+          ref={canvasRef}
+          className="sd-about__scene-canvas scene"
+          data-about-scene=""
+        />
+      </div>
     </div>
   );
 }
