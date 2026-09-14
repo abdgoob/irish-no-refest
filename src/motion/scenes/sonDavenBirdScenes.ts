@@ -1,7 +1,7 @@
 import { gsap } from "@/motion/core/gsap";
 import { BREAKPOINT_DESKTOP } from "@/motion/config/tokens";
 import { images } from "@/data/assets";
-import { initCanvasEffect } from "@/motion/prologue/asciiCanvasEffect.js";
+import { createBirdCanvas } from "@/motion/scenes/birdCanvas";
 
 type VideoLayer = {
   type: "video";
@@ -97,12 +97,14 @@ function aboutLayers(t: number): VideoLayer[] {
 function observeScenePlayback(
   canvas: HTMLCanvasElement,
   timeline: gsap.core.Timeline,
-  extraTargets: Element[] = [],
-): IntersectionObserver {
+  setPlaying: (active: boolean) => void,
+): () => void {
   const visibleTargets = new Set<Element>();
 
   const syncPlayback = () => {
-    if (visibleTargets.size > 0) {
+    const active = visibleTargets.size > 0 && !document.hidden;
+    setPlaying(active);
+    if (active) {
       if (timeline.paused()) timeline.play();
     } else if (!timeline.paused()) {
       timeline.pause();
@@ -117,36 +119,41 @@ function observeScenePlayback(
       });
       syncPlayback();
     },
-    { threshold: 0, rootMargin: "12% 0px 12% 0px" },
+    { threshold: 0.01 },
   );
 
   observer.observe(canvas);
-  extraTargets.forEach((el) => observer.observe(el));
+  document.addEventListener("visibilitychange", syncPlayback);
   syncPlayback();
 
-  return observer;
+  return () => {
+    observer.disconnect();
+    document.removeEventListener("visibilitychange", syncPlayback);
+  };
 }
 
 function mountScene(
   canvas: HTMLCanvasElement,
   layers: VideoLayer[],
   buildTimeline: (layers: VideoLayer[]) => gsap.core.Timeline,
-  extraPlaybackTargets: Element[] = [],
 ): (() => void) | null {
   if (typeof window === "undefined") return null;
 
-  const scene = initCanvasEffect(canvas, layers);
+  const scene = createBirdCanvas(canvas, layers);
   if (!scene) return null;
 
   const timeline = buildTimeline(layers);
-  let observer: IntersectionObserver | null = null;
+  let stopObserving: (() => void) | undefined;
+  let disposed = false;
 
   void scene.loaded.then(() => {
-    observer = observeScenePlayback(canvas, timeline, extraPlaybackTargets);
+    if (disposed) return;
+    stopObserving = observeScenePlayback(canvas, timeline, scene.setPlaying);
   });
 
   return () => {
-    observer?.disconnect();
+    disposed = true;
+    stopObserving?.();
     timeline.kill();
     scene.destroy();
   };
@@ -180,9 +187,6 @@ export function mountSonDavenAboutBirdScene(
 ): (() => void) | null {
   const t = bandPercent();
   const layers = aboutLayers(t);
-  const transition = document.querySelector(".sd-about-transition");
-  const section = canvas.closest("#about");
-  const extraTargets = [transition, section].filter(Boolean) as Element[];
 
   return mountScene(
     canvas,
@@ -210,6 +214,5 @@ export function mountSonDavenAboutBirdScene(
         },
         "<",
       ),
-    extraTargets,
   );
 }

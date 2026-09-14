@@ -45,7 +45,9 @@ export function FaqSection() {
       void (async () => {
         await whenFontsReady();
         if (disposed || !sectionRef.current) return;
-        teardown = await bindFaqMotion(sectionRef.current);
+        const cleanup = await bindFaqMotion(sectionRef.current);
+        if (disposed) cleanup();
+        else teardown = cleanup;
       })();
 
       return () => {
@@ -53,7 +55,7 @@ export function FaqSection() {
         teardown?.();
       };
     },
-    { scope: sectionRef, dependencies: [enhanced, ready] },
+    { scope: sectionRef, dependencies: [enhanced, ready], revertOnUpdate: true },
   );
 
   useGSAP(
@@ -127,7 +129,7 @@ export function FaqSection() {
             </div>
           </div>
         </div>
-        <div className="sd-faq__scenes sd-only-desk" aria-hidden>
+        <div className="sd-faq__scenes" aria-hidden>
           <canvas className="sd-faq__scene-canvas scene" data-faq-scene="" />
         </div>
 

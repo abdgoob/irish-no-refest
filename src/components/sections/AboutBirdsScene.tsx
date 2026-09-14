@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useMotionContext } from "@/motion/core/MotionContext";
 import { BREAKPOINT_DESKTOP } from "@/motion/config/tokens";
 import { mountSonDavenAboutBirdScene } from "@/motion/scenes/sonDavenBirdScenes";
 
 export function AboutBirdsScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { enhanced, ready } = useMotionContext();
 
   useEffect(() => {
+    if (!enhanced || !ready) return;
     const canvas = canvasRef.current;
     const intro = canvas?.closest(".sd-about__intro");
     if (!canvas || !intro) return;
@@ -34,14 +37,15 @@ export function AboutBirdsScene() {
     resizeObserver.observe(intro);
     desktopMq.addEventListener("change", sync);
     sync();
-    requestAnimationFrame(() => sync());
+    const frame = requestAnimationFrame(sync);
 
     return () => {
+      cancelAnimationFrame(frame);
       resizeObserver.disconnect();
       desktopMq.removeEventListener("change", sync);
       teardown?.();
     };
-  }, []);
+  }, [enhanced, ready]);
 
   return (
     <div className="sd-about__intro sd-only-desk" aria-hidden="true">

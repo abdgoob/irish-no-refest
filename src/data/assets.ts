@@ -39,7 +39,7 @@ export const images = {
     videoRight: "/assets/restaurant/atmosphere/prologue-right.mp4",
   },
   faqScene: {
-    birdsTop: "/assets/restaurant/atmosphere/faq-birds-top.mp4",
+    birdsTop: "/assets/restaurant/atmosphere/faq-birds-top-h264.mp4",
     birdsBottom: "/assets/restaurant/atmosphere/faq-birds-bottom.mp4",
   },
   aboutScene: {

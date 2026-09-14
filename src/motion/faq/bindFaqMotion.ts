@@ -19,11 +19,6 @@ export async function bindFaqMotion(root: HTMLElement): Promise<() => void> {
     let sceneTeardown: (() => void) | undefined;
 
     const syncScene = () => {
-      if (!desktopMq.matches) {
-        sceneTeardown?.();
-        sceneTeardown = undefined;
-        return;
-      }
       if (sceneTeardown) return;
       const { width, height } = scenesWrap.getBoundingClientRect();
       if (width < 16 || height < 16) return;
@@ -33,13 +28,19 @@ export async function bindFaqMotion(root: HTMLElement): Promise<() => void> {
 
     const resizeObserver = new ResizeObserver(() => syncScene());
     resizeObserver.observe(scenesWrap);
-    desktopMq.addEventListener("change", syncScene);
+    const onBreakpoint = () => {
+      sceneTeardown?.();
+      sceneTeardown = undefined;
+      syncScene();
+    };
+    desktopMq.addEventListener("change", onBreakpoint);
     syncScene();
-    requestAnimationFrame(() => syncScene());
+    const frame = requestAnimationFrame(syncScene);
 
     cleanups.push(() => {
+      cancelAnimationFrame(frame);
       resizeObserver.disconnect();
-      desktopMq.removeEventListener("change", syncScene);
+      desktopMq.removeEventListener("change", onBreakpoint);
       sceneTeardown?.();
     });
   }
