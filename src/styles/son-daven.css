@@ -1787,14 +1787,6 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  transition:
-    opacity 0.55s ease,
-    visibility 0.55s ease;
-}
-
-.sd-faq-glyph-portal__birds--off {
-  opacity: 0;
-  visibility: hidden;
 }
 
 .sd-faq-glyph-portal__birds .sd-faq__scene-canvas {

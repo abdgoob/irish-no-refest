@@ -144,12 +144,14 @@ export function createBirdCanvas(canvas: HTMLCanvasElement, layers: BirdLayer[])
     gl.uniform2f(uniforms.resolution, width, height);
     for (const item of media) {
       const { video, texture, layer: { config } } = item;
-      if (video.readyState < video.HAVE_CURRENT_DATA || !texture) continue;
+      if (!texture) continue;
       gl.bindTexture(gl.TEXTURE_2D, texture);
-      if (item.lastTime !== video.currentTime) {
+      if (video.readyState >= video.HAVE_CURRENT_DATA && item.lastTime !== video.currentTime) {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
         item.lastTime = video.currentTime;
       }
+      // Loop seeks can briefly drop readyState; retain the last decoded frame.
+      if (item.lastTime < 0) continue;
       gl.uniform2f(uniforms.sourceSize, video.videoWidth, video.videoHeight);
       gl.uniform4f(uniforms.bounds, length(config.x, width), length(config.y, height),
         length(config.width, width), length(config.height, height));

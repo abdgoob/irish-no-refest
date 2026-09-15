@@ -28,11 +28,21 @@ export function SiteLoader() {
       loaderRef.current.style.setProperty("--wordmark-width", `${rect.width}px`);
     };
     window.addEventListener("resize", syncTarget);
-    const images = Array.from(document.querySelectorAll<HTMLImageElement>("#hero img, [data-loader-animal]"))
+    const images = Array.from(document.querySelectorAll<HTMLImageElement>("#hero img"))
       .filter((img) => img.getBoundingClientRect().width > 0);
-    const animalImage = new window.Image();
-    animalImage.src = "/assets/restaurant/brand/loader-longhorn.png";
-    const tasks = [document.fonts.ready, animalImage.decode(), ...images.map((img) => img.decode())];
+    const video = loaderRef.current?.querySelector<HTMLVideoElement>("[data-loader-video]");
+    let removeVideoListeners = () => {};
+    const videoReady = new Promise<void>((resolve) => {
+      if (!video || video.readyState >= 2 || video.error) { resolve(); return; }
+      const finish = () => { removeVideoListeners(); resolve(); };
+      removeVideoListeners = () => {
+        video.removeEventListener("loadeddata", finish);
+        video.removeEventListener("error", finish);
+      };
+      video.addEventListener("loadeddata", finish, { once: true });
+      video.addEventListener("error", finish, { once: true });
+    });
+    const tasks = [document.fonts.ready, videoReady, ...images.map((img) => img.decode())];
     let completed = 0;
     const assets = Promise.allSettled(tasks.map(async (task) => {
       try { await task; } finally {
@@ -56,6 +66,7 @@ export function SiteLoader() {
     return () => {
       cancelled = true;
       timers.forEach(clearTimeout);
+      removeVideoListeners();
       window.removeEventListener("resize", syncTarget);
       if (heroWordmark) heroWordmark.style.visibility = originalVisibility;
     };

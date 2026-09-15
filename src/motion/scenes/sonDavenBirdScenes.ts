@@ -102,16 +102,16 @@ function pickAboutFlightLeg(t: number): AboutFlightLeg {
       duration: randBetween(4.3, 6.2),
     },
     {
-      xFrom: `${randBetween(-28, -8)}%`,
+      xFrom: `${-off}%`,
       yFrom: `${randBetween(-18, -4)}%`,
-      xTo: `${randBetween(88, 108)}%`,
+      xTo: `${100 + randBetween(2, 10)}%`,
       yTo: `${randBetween(34, 52)}%`,
       duration: randBetween(5, 7.2),
     },
     {
-      xFrom: `${randBetween(92, 108)}%`,
+      xFrom: `${100 + randBetween(2, 10)}%`,
       yFrom: `${randBetween(38, 58)}%`,
-      xTo: `${randBetween(-32, -6)}%`,
+      xTo: `${-off}%`,
       yTo: `${randBetween(-8, 14)}%`,
       duration: randBetween(4.6, 6.6),
     },
@@ -263,8 +263,7 @@ export function mountSonDavenFaqBirdScene(
         x: "100%",
         duration: isDesktop() ? 5 : 2.5,
         ease: "none",
-      })
-      .to({}, { duration: 5 }),
+      }),
   );
 }
 
