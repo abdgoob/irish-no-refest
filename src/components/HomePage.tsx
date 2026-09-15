@@ -5,6 +5,7 @@ import { EditorialMotionLayer } from "@/motion/editorial/EditorialMotionLayer";
 import { HeaderThemeObserver } from "@/motion/header/HeaderThemeObserver";
 import type { HeaderTheme } from "@/motion/header/types";
 import { NoiseOverlay } from "@/components/layout/NoiseOverlay";
+import { SiteLoader } from "@/components/layout/SiteLoader";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { ConsultationModal } from "@/components/layout/ConsultationModal";
 import { MenuModal } from "@/components/layout/MenuModal";
@@ -28,6 +29,7 @@ export function HomePage() {
 
   return (
     <>
+      <SiteLoader />
       <NoiseOverlay />
       <HeaderThemeObserver onThemeChange={onHeaderThemeChange} />
       <SiteHeader
@@ -44,7 +46,7 @@ export function HomePage() {
         <BenefitsSection />
         <ApartmentsSection />
         <FaqSection />
-        <SiteFooter />
+        <SiteFooter onReserveClick={() => setConsultationOpen(true)} />
       </main>
       <MenuModal open={menuOpen} onClose={() => setMenuOpen(false)} />
       <ConsultationModal open={consultationOpen} onClose={() => setConsultationOpen(false)} />

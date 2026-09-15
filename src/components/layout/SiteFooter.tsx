@@ -1,5 +1,5 @@
-import { FooterScrollScene } from "@/components/layout/FooterScrollScene";
+import { MotionFooter } from "@/components/ui/motion-footer";
 
-export function SiteFooter() {
-  return <FooterScrollScene />;
+export function SiteFooter({ onReserveClick }: { onReserveClick: () => void }) {
+  return <MotionFooter onReserveClick={onReserveClick} />;
 }

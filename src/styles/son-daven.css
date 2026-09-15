@@ -836,7 +836,7 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
 
 .sd-about__copy-row {
   align-items: start;
-  min-height: calc(720rem / var(--scale-ratio));
+  min-height: clamp(480px, calc(560rem / var(--scale-ratio)), 720px);
 }
 
 .sd-about__col {
@@ -847,15 +847,69 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
   margin-top: calc(40rem / var(--scale-ratio));
 }
 
-.sd-about__bleed {
-  margin-top: calc(-136rem / var(--scale-ratio));
-}
-
-.sd-about__image {
+.sd-about-carousel-transition {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 11;
+  height: clamp(180px, calc(300rem / var(--scale-ratio)), 380px);
+  margin-top: calc(-112rem / var(--scale-ratio));
   overflow: hidden;
+}
+
+.sd-about-carousel-transition::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 70%;
+  background: linear-gradient(to bottom, transparent, rgba(44, 40, 36, 0.035));
+}
+
+.sd-about-carousel-transition__orbit {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: min(82vw, 1320px);
+  aspect-ratio: 2 / 1;
+  border: 1px solid rgba(44, 40, 36, 0.18);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+}
+
+.sd-about-carousel-transition__axis {
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(44, 40, 36, 0.28) 28%,
+    rgba(44, 40, 36, 0.08)
+  );
+}
+
+.sd-about-carousel-transition__dot {
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-brown);
+  transform: translateX(-50%);
+}
+
+.sd-about-carousel-transition__label {
+  position: absolute;
+  left: 50%;
+  top: calc(16rem / var(--scale-ratio));
+  padding: 0 calc(12rem / var(--scale-ratio));
+  background: var(--color-taupe);
+  transform: translateX(-50%);
+  letter-spacing: 0.16em;
+  white-space: nowrap;
 }
 
 .sd-atmosphere-transition {
@@ -902,7 +956,8 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
 }
 
 .sd-benefits {
-  padding-block: calc(96rem / var(--scale-ratio));
+  padding: calc(32rem / var(--scale-ratio)) 0
+    calc(96rem / var(--scale-ratio));
   background: var(--color-taupe);
   color: var(--color-brown);
   overflow: hidden;
@@ -2264,12 +2319,23 @@ html[data-motion-enhanced="true"] .sd-hero-stage {
     min-height: 0;
   }
 
-  .sd-about__bleed {
-    margin-top: calc(48rem / var(--scale-ratio));
+  .sd-about__copy-row {
+    min-height: 0;
   }
 
-  .sd-about__image {
-    aspect-ratio: 4 / 5;
+  .sd-about-carousel-transition {
+    height: 180px;
+    margin-top: 48px;
+  }
+
+  .sd-about-carousel-transition__orbit {
+    top: 45%;
+    width: 150vw;
+  }
+
+  .sd-about-carousel-transition__label {
+    top: 14px;
+    font-size: 9px;
   }
 
   .sd-about__col--offset {

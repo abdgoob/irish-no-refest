@@ -2,6 +2,13 @@ import { images } from "@/data/assets";
 import styles from "./HeroSection.module.css";
 import { MediaImage } from "@/components/ui/MediaImage";
 import { HeroScrollScene } from "@/motion/hero/HeroScrollScene";
+import { NorefestWordmark } from "@/components/ui/NorefestWordmark";
+
+const HERO_WAVE_HEIGHTS = [
+  150, 155, 158, 160, 160, 158, 153, 146, 137, 126, 116, 105, 97, 90, 85,
+  83, 83, 86, 90, 94, 99, 102, 104, 104, 101, 95, 88, 78, 68, 57, 47, 39,
+  32, 28, 26, 27, 30, 34, 38, 43, 46, 48,
+] as const;
 
 export function HeroSection() {
   return (
@@ -31,7 +38,9 @@ export function HeroSection() {
     >
       <div className={styles.overlay}>
         <div className={styles.wave} aria-hidden="true">
-          {Array.from({ length: 42 }, (_, i) => <i key={i} style={{ height: `${Math.max(8, 150 - i * 3 + Math.sin(i / 3) * 23)}px` }} />)}
+          {HERO_WAVE_HEIGHTS.map((height, i) => (
+            <i key={i} style={{ height: `${height}px` }} />
+          ))}
         </div>
         <p className={styles.belong}>A<br />PLACE<br />TO<br />BELONG</p>
         <div className={styles.goodTimes}>
@@ -41,15 +50,7 @@ export function HeroSection() {
         <div className={styles.center}>
           <p className={styles.eyebrow}>IRISH HOUSE</p>
           <h1 className={styles.wordmark} aria-label="Norefest">
-            <svg viewBox="0 0 1240 200" aria-hidden="true">
-              <defs>
-                <filter id="norefest-fringe" x="-2%" y="-20%" width="104%" height="140%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.12 0.002" numOctaves="1" seed="8" result="noise" />
-                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="30" xChannelSelector="R" yChannelSelector="G" />
-                </filter>
-              </defs>
-              <text x="20" y="166" textLength="1200" lengthAdjust="spacingAndGlyphs" filter="url(#norefest-fringe)">NOREFEST</text>
-            </svg>
+            <NorefestWordmark id="norefest-fringe" />
           </h1>
           <p className={styles.tagline}>IRISH SOUL. AUSTIN SPIRIT.</p>
         </div>

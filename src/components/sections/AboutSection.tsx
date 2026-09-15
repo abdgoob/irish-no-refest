@@ -1,4 +1,3 @@
-import { MediaImage } from "@/components/ui/MediaImage";
 import { AboutBirdsScene } from "@/components/sections/AboutBirdsScene";
 import { about } from "@/data/restaurant/home";
 
@@ -56,14 +55,17 @@ export function AboutSection() {
         </div>
       </div>
 
-      <div className="sd-about__bleed" data-parallax="container-up">
-        <div className="sd-about__image" data-parallax="image">
-          <MediaImage
-            src={about.image}
-            alt={about.imageAlt}
-            sizes="100vw"
-          />
+      <div className="sd-about-carousel-transition" aria-hidden="true">
+        <div
+          className="sd-about-carousel-transition__orbit"
+          data-parallax="container-up"
+        >
+          <span className="sd-about-carousel-transition__dot" />
+          <span className="p6 sd-about-carousel-transition__label">
+            THE HOUSE / EIGHT WAYS IN
+          </span>
         </div>
+        <div className="sd-about-carousel-transition__axis" />
       </div>
     </section>
   );
